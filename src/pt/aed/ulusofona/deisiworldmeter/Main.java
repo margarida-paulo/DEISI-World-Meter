@@ -21,6 +21,7 @@ public class Main {
      */
     static Boolean parseEachFile(String ficheiro, int tipoData) {
         File ficheiroLido = new File(ficheiro);
+        boolean primeiraLinha = true;
         int linhaCount = 0;
         Scanner scanner;
 
@@ -30,25 +31,27 @@ public class Main {
             return false;
         }
 
-        if (scanner.hasNext()) { // não nos interessa a primeira linha de cada ficheiro
-            scanner.nextLine();
-            linhaCount++;
-        }
+        while (scanner.hasNext()){
+            if (primeiraLinha){
+                scanner.nextLine();
+                primeiraLinha = false;
+            }
+            else {
+                boolean erro = false;
+                String linha = scanner.nextLine();
+                String[] linhaDividida = linha.split(",");
+                switch (tipoData){
+                    case 0 -> {
+                        if (newPais(linhaDividida, erro, linhaCount)) return false;
+                    }
+                    case 1 -> {
+                        if (newCidade(linhaDividida, erro, linhaCount)) return false;
+                    }
+                    case 2 -> {
+                        if (newPopulacao(linhaDividida, erro, linhaCount)) return false;
+                    }
+                }
 
-        while (scanner.hasNext()) {
-            boolean erro = false;
-            String linha = scanner.nextLine();
-            String[] linhaDividida = linha.split(",");
-            switch (tipoData) {
-                case 0 -> {
-                    if (newPais(linhaDividida, erro, linhaCount)) return false;
-                }
-                case 1 -> {
-                    if (newCidade(linhaDividida, erro, linhaCount)) return false;
-                }
-                case 2 -> {
-                    if (newPopulacao(linhaDividida, erro, linhaCount)) return false;
-                }
             }
             linhaCount++;
         }
@@ -56,7 +59,7 @@ public class Main {
     }
 
     private static boolean newPopulacao(String[] linhaDividida, boolean erro, int linhaCount) {
-        if (linhaDividida.length != 5) {
+        if (linhaDividida.length != 5){
             erro = true;
             return true;
         }
@@ -95,22 +98,23 @@ public class Main {
             erro = true;
             linhaDividida[4] = "-1.0";
         }
-        if (dataInvalidos.get(2).primeiraLinhaNaoOK == 0 && erro) {
-            dataInvalidos.get(2).primeiraLinhaNaoOK = linhaCount;
+        if (Populacao.primeiraLinhaInvalida == 0 && erro){
+            Populacao.primeiraLinhaInvalida = linhaCount;
         }
-        if (erro) {
-            dataInvalidos.get(2).numeroLinhasNaoOk++;
+        if (erro){
+            Populacao.linhasInvalidas++;
         } else {
-            dataInvalidos.get(2).numeroLinhasOk++;
+            Populacao.linhasCorretas++;
         }
-        dataPopulacao.add(new Populacao(Integer.parseInt(linhaDividida[0]), Integer.parseInt(linhaDividida[1]), Integer.parseInt(linhaDividida[2]), Integer.parseInt(linhaDividida[3]), Float.parseFloat(linhaDividida[4]), erro));
+        dataPopulacao.add(new Populacao(Integer.parseInt(linhaDividida[0]), Integer.parseInt(linhaDividida[1]), Integer.parseInt(linhaDividida[2]), Integer.parseInt(linhaDividida[3]), Float.parseFloat(linhaDividida[4]), linhaCount, erro));
         return false;
     }
 
     private static boolean newCidade(String[] linhaDividida, boolean erro, int linhaCount) {
-        if (linhaDividida.length != 6) {
+        if (linhaDividida.length != 6){
             return true;
         }
+
         try {
             Integer.parseInt(linhaDividida[2]);
         } catch (NumberFormatException e) {
@@ -131,26 +135,27 @@ public class Main {
             erro = true;
             linhaDividida[4] = "-1.0";
         }
+
         try {
             Float.parseFloat(linhaDividida[5]);
         } catch (NumberFormatException h) {
             erro = true;
             linhaDividida[5] = "-1.0";
         }
-        if (dataInvalidos.get(1).primeiraLinhaNaoOK == 0 && erro) {
-            dataInvalidos.get(1).primeiraLinhaNaoOK = linhaCount;
+        if (Cidade.primeiraLinhaInvalida == 0 && erro){
+            Cidade.primeiraLinhaInvalida = linhaCount;
         }
-        if (erro) {
-            dataInvalidos.get(1).numeroLinhasNaoOk++;
+        if (erro){
+            Cidade.linhasInvalidas++;
         } else {
-            dataInvalidos.get(1).numeroLinhasOk++;
+            Cidade.linhasCorretas++;
         }
-        dataCidades.add(new Cidade(linhaDividida[0], linhaDividida[1], Integer.parseInt(linhaDividida[2]), Float.parseFloat(linhaDividida[3]), Float.parseFloat(linhaDividida[4]), Float.parseFloat(linhaDividida[5]), erro));
+        dataCidades.add(new Cidade(linhaDividida[0], linhaDividida[1], Integer.parseInt(linhaDividida[2]), Float.parseFloat(linhaDividida[3]), Float.parseFloat(linhaDividida[4]), Float.parseFloat(linhaDividida[5]), linhaCount, erro));
         return false;
     }
 
     private static boolean newPais(String[] linhaDividida, boolean erro, int linhaCount) {
-        if (linhaDividida.length != 4) {
+        if (linhaDividida.length != 4){
             return true;
         }
         try {
@@ -159,15 +164,15 @@ public class Main {
             erro = true;
             linhaDividida[0] = "-1";
         }
-        if (dataInvalidos.get(0).primeiraLinhaNaoOK == 0 && erro) {
-            dataInvalidos.get(0).primeiraLinhaNaoOK = linhaCount;
+        if (Pais.primeiraLinhaInvalida == 0 && erro){
+            Pais.primeiraLinhaInvalida = linhaCount;
         }
-        if (erro) {
-            dataInvalidos.get(0).numeroLinhasNaoOk++;
+        if (erro){
+            Pais.linhasInvalidas++;
         } else {
-            dataInvalidos.get(0).numeroLinhasOk++;
+            Pais.linhasCorretas++;
         }
-        dataPaises.add(new Pais(Integer.parseInt(linhaDividida[0]), linhaDividida[1], linhaDividida[2], linhaDividida[3], erro));
+        dataPaises.add(new Pais(Integer.parseInt(linhaDividida[0]), linhaDividida[1], linhaDividida[2], linhaDividida[3], linhaCount, erro));
         return false;
     }
 
