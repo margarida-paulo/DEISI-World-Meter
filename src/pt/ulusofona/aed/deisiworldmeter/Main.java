@@ -41,21 +41,9 @@ public class Main {
                 String linha = scanner.nextLine();
                 String[] linhaDividida = linha.split(",");
                 switch (tipoData){
-                    case 0 -> {
-                        if (newPais(linhaDividida, erro, linhaCount)){
-                            return false;
-                        }
-                    }
-                    case 1 -> {
-                        if (newCidade(linhaDividida, erro, linhaCount)){
-                            return false;
-                        }
-                    }
-                    case 2 -> {
-                        if (newPopulacao(linhaDividida, erro, linhaCount)){
-                            return false;
-                        }
-                    }
+                    case 0 -> newPais(linhaDividida, erro, linhaCount);
+                    case 1 -> newCidade(linhaDividida, erro, linhaCount);
+                    case 2 -> newPopulacao(linhaDividida, erro, linhaCount);
                 }
 
             }
@@ -66,7 +54,9 @@ public class Main {
 
     private static boolean newPopulacao(String[] linhaDividida, boolean erro, int linhaCount) {
         if (linhaDividida.length != 5){
-            Populacao.primeiraLinhaInvalida = linhaCount;
+            if (Populacao.primeiraLinhaInvalida == 0){
+                Populacao.primeiraLinhaInvalida = linhaCount;
+            }
             return false;
         }
 
@@ -74,41 +64,37 @@ public class Main {
             Integer.parseInt(linhaDividida[0]);
         } catch (NumberFormatException e) {
             erro = true;
-            linhaDividida[0] = "-1";
         }
 
         try {
             Integer.parseInt(linhaDividida[1]);
         } catch (NumberFormatException f) {
             erro = true;
-            linhaDividida[1] = "-1";
         }
 
         try {
             Integer.parseInt(linhaDividida[2]);
         } catch (NumberFormatException g) {
             erro = true;
-            linhaDividida[2] = "-1";
         }
 
         try {
             Integer.parseInt(linhaDividida[3]);
         } catch (NumberFormatException h) {
             erro = true;
-            linhaDividida[3] = "-1";
         }
 
         try {
             Float.parseFloat(linhaDividida[4]);
         } catch (NumberFormatException h) {
             erro = true;
-            linhaDividida[4] = "-1.0";
         }
         if (Populacao.primeiraLinhaInvalida == 0 && erro){
             Populacao.primeiraLinhaInvalida = linhaCount;
         }
         if (erro){
             Populacao.linhasInvalidas++;
+            return false;
         } else {
             Populacao.linhasCorretas++;
         }
@@ -118,7 +104,9 @@ public class Main {
 
     private static boolean newCidade(String[] linhaDividida, boolean erro, int linhaCount) {
         if (linhaDividida.length != 6){
-            Cidade.primeiraLinhaInvalida = linhaCount;
+            if (Cidade.primeiraLinhaInvalida == 0){
+                Cidade.primeiraLinhaInvalida = linhaCount;
+            }
             return false;
         }
 
@@ -126,34 +114,31 @@ public class Main {
             Integer.parseInt(linhaDividida[2]);
         } catch (NumberFormatException e) {
             erro = true;
-            linhaDividida[2] = "-1";
         }
 
         try {
             Float.parseFloat(linhaDividida[3]);
         } catch (NumberFormatException f) {
             erro = true;
-            linhaDividida[3] = "-1.0";
         }
 
         try {
             Float.parseFloat(linhaDividida[4]);
         } catch (NumberFormatException g) {
             erro = true;
-            linhaDividida[4] = "-1.0";
         }
 
         try {
             Float.parseFloat(linhaDividida[5]);
         } catch (NumberFormatException h) {
             erro = true;
-            linhaDividida[5] = "-1.0";
         }
         if (Cidade.primeiraLinhaInvalida == 0 && erro){
             Cidade.primeiraLinhaInvalida = linhaCount;
         }
         if (erro){
             Cidade.linhasInvalidas++;
+            return false;
         } else {
             Cidade.linhasCorretas++;
         }
@@ -170,13 +155,13 @@ public class Main {
             Integer.parseInt(linhaDividida[0]);
         } catch (NumberFormatException e) {
             erro = true;
-            linhaDividida[0] = "-1";
         }
         if (Pais.primeiraLinhaInvalida == 0 && erro){
             Pais.primeiraLinhaInvalida = linhaCount;
         }
         if (erro){
             Pais.linhasInvalidas++;
+            return false;
         } else {
             Pais.linhasCorretas++;
         }
