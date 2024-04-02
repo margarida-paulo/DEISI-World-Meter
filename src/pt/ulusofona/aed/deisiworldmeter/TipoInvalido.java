@@ -1,4 +1,4 @@
-package pt.aed.ulusofona.deisiworldmeter;
+package pt.ulusofona.aed.deisiworldmeter;
 public class TipoInvalido {
     String nomeDoFicheiro;
     int numeroLinhasOk;

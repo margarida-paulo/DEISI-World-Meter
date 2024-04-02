@@ -1,11 +1,11 @@
-package pt.aed.ulusofona.deisiworldmeter;
+package pt.ulusofona.aed.deisiworldmeter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
-enum TipoIdentidade { // por informação do Rodrigo deu-lhe erro com o enumerado dentro da classe Main, por isso meti fora !
-    PAIS, CIDADE, TIPO_INVALIDO
+enum TipoEntidade {
+    PAIS, CIDADE, INPUT_INVALIDO
 }
 
 public class Main {
@@ -42,13 +42,19 @@ public class Main {
                 String[] linhaDividida = linha.split(",");
                 switch (tipoData){
                     case 0 -> {
-                        if (newPais(linhaDividida, erro, linhaCount)) return false;
+                        if (newPais(linhaDividida, erro, linhaCount)){
+                            return false;
+                        }
                     }
                     case 1 -> {
-                        if (newCidade(linhaDividida, erro, linhaCount)) return false;
+                        if (newCidade(linhaDividida, erro, linhaCount)){
+                            return false;
+                        }
                     }
                     case 2 -> {
-                        if (newPopulacao(linhaDividida, erro, linhaCount)) return false;
+                        if (newPopulacao(linhaDividida, erro, linhaCount)){
+                            return false;
+                        }
                     }
                 }
 
@@ -60,8 +66,8 @@ public class Main {
 
     private static boolean newPopulacao(String[] linhaDividida, boolean erro, int linhaCount) {
         if (linhaDividida.length != 5){
-            erro = true;
-            return true;
+            Populacao.primeiraLinhaInvalida = linhaCount;
+            return false;
         }
 
         try {
@@ -112,7 +118,8 @@ public class Main {
 
     private static boolean newCidade(String[] linhaDividida, boolean erro, int linhaCount) {
         if (linhaDividida.length != 6){
-            return true;
+            Cidade.primeiraLinhaInvalida = linhaCount;
+            return false;
         }
 
         try {
@@ -156,7 +163,8 @@ public class Main {
 
     private static boolean newPais(String[] linhaDividida, boolean erro, int linhaCount) {
         if (linhaDividida.length != 4){
-            return true;
+            Pais.primeiraLinhaInvalida = linhaCount;
+            return false;
         }
         try {
             Integer.parseInt(linhaDividida[0]);
@@ -193,22 +201,22 @@ public class Main {
         return true;
     }
 
-    static ArrayList<String> getObjects(TipoIdentidade tipo) {
+    static ArrayList<String> getObjects(TipoEntidade tipo) {
         ArrayList<String> novaInformacao = new ArrayList<>();
 
-        if (tipo == TipoIdentidade.TIPO_INVALIDO) {
+        if (tipo == TipoEntidade.INPUT_INVALIDO) {
             for (TipoInvalido dataInvalido : dataInvalidos) {
                 novaInformacao.add(dataInvalido.toString());
             }
         }
 
-        if (tipo == TipoIdentidade.PAIS) {
+        if (tipo == TipoEntidade.PAIS) {
             for (Pais dataPais : dataPaises) {
                 novaInformacao.add(dataPais.toString());
             }
         }
 
-        if (tipo == TipoIdentidade.CIDADE) {
+        if (tipo == TipoEntidade.CIDADE) {
             for (Cidade dataCidade : dataCidades) {
                 novaInformacao.add(dataCidade.toString());
             }
@@ -225,25 +233,24 @@ public class Main {
         System.out.println();
         if (parseFiles(new File("Data"))) {
             int i = 0;
-            /*
-            ArrayList country = getObject(TipoIdentidade.PAIS);
+
+            ArrayList country = getObjects(TipoEntidade.PAIS);
             while (i < country.size()) {
                 System.out.println(country.get(i).toString());
                 i++;
             }
 
-            ArrayList city = getObject(TipoIdentidade.CIDADE);
+            ArrayList city = getObjects(TipoEntidade.CIDADE);
             while (i < city.size()) {
                 System.out.println(city.get(i).toString());
                 i++;
             }
-            */
-            ArrayList inavlideType = getObjects(TipoIdentidade.TIPO_INVALIDO);
+
+            ArrayList inavlideType = getObjects(TipoEntidade.INPUT_INVALIDO);
             while (i < inavlideType.size()) {
                 System.out.println(inavlideType.get(i).toString());
                 i++;
             }
-
         }
     }
 }

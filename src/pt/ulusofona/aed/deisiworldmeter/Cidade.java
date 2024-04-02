@@ -1,4 +1,4 @@
-package pt.aed.ulusofona.deisiworldmeter;
+package pt.ulusofona.aed.deisiworldmeter;
 
 public class Cidade {
     String alfa2;
@@ -29,6 +29,6 @@ public class Cidade {
     }
 
     public String toString(){
-        return alfa2 + " | " + cidade + " | " + regiao + " | " + populacao + " | " + latitude + " | " + longitude;
+        return cidade + " | " + alfa2.toUpperCase() + " | " + regiao + " | " + (int)populacao + " | (" + latitude + "," + longitude + ")";
     }
 }
