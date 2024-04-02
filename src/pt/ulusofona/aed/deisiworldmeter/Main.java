@@ -21,7 +21,6 @@ public class Main {
      */
     static Boolean parseEachFile(String ficheiro, int tipoData) {
         File ficheiroLido = new File(ficheiro);
-        boolean primeiraLinha = true;
         int linhaCount = 0;
         Scanner scanner;
 
@@ -31,21 +30,20 @@ public class Main {
             return false;
         }
 
-        while (scanner.hasNext()){
-            if (primeiraLinha){
-                scanner.nextLine();
-                primeiraLinha = false;
-            }
-            else {
-                boolean erro = false;
-                String linha = scanner.nextLine();
-                String[] linhaDividida = linha.split(",");
-                switch (tipoData){
-                    case 0 -> newPais(linhaDividida, erro, linhaCount);
-                    case 1 -> newCidade(linhaDividida, erro, linhaCount);
-                    case 2 -> newPopulacao(linhaDividida, erro, linhaCount);
-                }
+        if (scanner.hasNext()) { // não nos interessa a primeira linha de cada ficheiro
+            scanner.nextLine();
+            linhaCount++;
+        }
 
+        while (scanner.hasNext()) {
+
+            boolean erro = false;
+            String linha = scanner.nextLine();
+            String[] linhaDividida = linha.split(",");
+            switch (tipoData) {
+                case 0 -> newPais(linhaDividida, erro, linhaCount);
+                case 1 -> newCidade(linhaDividida, erro, linhaCount);
+                case 2 -> newPopulacao(linhaDividida, erro, linhaCount);
             }
             linhaCount++;
         }
@@ -53,9 +51,9 @@ public class Main {
     }
 
     private static boolean newPopulacao(String[] linhaDividida, boolean erro, int linhaCount) {
-        if (linhaDividida.length != 5){
-            if (Populacao.primeiraLinhaInvalida == 0){
-                Populacao.primeiraLinhaInvalida = linhaCount;
+        if (linhaDividida.length != 5) {
+            if (dataInvalidos.get(2).primeiraLinhaNaoOK == -1) {
+                dataInvalidos.get(2).primeiraLinhaNaoOK = linhaCount;
             }
             return false;
         }
@@ -89,23 +87,23 @@ public class Main {
         } catch (NumberFormatException h) {
             erro = true;
         }
-        if (Populacao.primeiraLinhaInvalida == 0 && erro){
-            Populacao.primeiraLinhaInvalida = linhaCount;
+        if (dataInvalidos.get(2).primeiraLinhaNaoOK == -1 && erro) {
+            dataInvalidos.get(2).primeiraLinhaNaoOK = linhaCount;
         }
-        if (erro){
-            Populacao.linhasInvalidas++;
+        if (erro) {
+            dataInvalidos.get(2).numeroLinhasNaoOk++;
             return false;
         } else {
-            Populacao.linhasCorretas++;
+            dataInvalidos.get(2).numeroLinhasOk++;
         }
-        dataPopulacao.add(new Populacao(Integer.parseInt(linhaDividida[0]), Integer.parseInt(linhaDividida[1]), Integer.parseInt(linhaDividida[2]), Integer.parseInt(linhaDividida[3]), Float.parseFloat(linhaDividida[4]), linhaCount, erro));
+        dataPopulacao.add(new Populacao(Integer.parseInt(linhaDividida[0]), Integer.parseInt(linhaDividida[1]), Integer.parseInt(linhaDividida[2]), Integer.parseInt(linhaDividida[3]), Float.parseFloat(linhaDividida[4]), erro));
         return false;
     }
 
     private static boolean newCidade(String[] linhaDividida, boolean erro, int linhaCount) {
-        if (linhaDividida.length != 6){
-            if (Cidade.primeiraLinhaInvalida == 0){
-                Cidade.primeiraLinhaInvalida = linhaCount;
+        if (linhaDividida.length != 6) {
+            if (dataInvalidos.get(1).primeiraLinhaNaoOK == -1) {
+                dataInvalidos.get(1).primeiraLinhaNaoOK = linhaCount;
             }
             return false;
         }
@@ -133,22 +131,22 @@ public class Main {
         } catch (NumberFormatException h) {
             erro = true;
         }
-        if (Cidade.primeiraLinhaInvalida == 0 && erro){
-            Cidade.primeiraLinhaInvalida = linhaCount;
+        if (dataInvalidos.get(1).primeiraLinhaNaoOK == -1 && erro) {
+            dataInvalidos.get(1).primeiraLinhaNaoOK = linhaCount;
         }
-        if (erro){
-            Cidade.linhasInvalidas++;
+        if (erro) {
+            dataInvalidos.get(1).numeroLinhasNaoOk++;
             return false;
         } else {
-            Cidade.linhasCorretas++;
+            dataInvalidos.get(1).numeroLinhasOk++;
         }
-        dataCidades.add(new Cidade(linhaDividida[0], linhaDividida[1], Integer.parseInt(linhaDividida[2]), Float.parseFloat(linhaDividida[3]), Float.parseFloat(linhaDividida[4]), Float.parseFloat(linhaDividida[5]), linhaCount, erro));
+        dataCidades.add(new Cidade(linhaDividida[0], linhaDividida[1], Integer.parseInt(linhaDividida[2]), Float.parseFloat(linhaDividida[3]), Float.parseFloat(linhaDividida[4]), Float.parseFloat(linhaDividida[5]), erro));
         return false;
     }
 
     private static boolean newPais(String[] linhaDividida, boolean erro, int linhaCount) {
-        if (linhaDividida.length != 4){
-            Pais.primeiraLinhaInvalida = linhaCount;
+        if (linhaDividida.length != 4) {
+            dataInvalidos.get(0).primeiraLinhaNaoOK = linhaCount;
             return false;
         }
         try {
@@ -156,16 +154,16 @@ public class Main {
         } catch (NumberFormatException e) {
             erro = true;
         }
-        if (Pais.primeiraLinhaInvalida == 0 && erro){
-            Pais.primeiraLinhaInvalida = linhaCount;
+        if (dataInvalidos.get(0).primeiraLinhaNaoOK == -1 && erro) {
+            dataInvalidos.get(0).primeiraLinhaNaoOK = linhaCount;
         }
-        if (erro){
-            Pais.linhasInvalidas++;
+        if (erro) {
+            dataInvalidos.get(0).numeroLinhasNaoOk++;
             return false;
         } else {
-            Pais.linhasCorretas++;
+            dataInvalidos.get(0).numeroLinhasOk++;
         }
-        dataPaises.add(new Pais(Integer.parseInt(linhaDividida[0]), linhaDividida[1], linhaDividida[2], linhaDividida[3], linhaCount, erro));
+        dataPaises.add(new Pais(Integer.parseInt(linhaDividida[0]), linhaDividida[1], linhaDividida[2], linhaDividida[3], erro));
         return false;
     }
 
@@ -210,15 +208,15 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        dataInvalidos.add(new TipoInvalido("paises.csv", 0, 0, 0)); // dataInvalidos.get(0)
-        dataInvalidos.add(new TipoInvalido("cidades.csv", 0, 0, 0)); // dataInvalidos.get(1)
-        dataInvalidos.add(new TipoInvalido("populacao.csv", 0, 0, 0)); // dataInvalidos.get(2)
+        dataInvalidos.add(new TipoInvalido("paises.csv", 0, 0, -1)); // dataInvalidos.get(0)
+        dataInvalidos.add(new TipoInvalido("cidades.csv", 0, 0, -1)); // dataInvalidos.get(1)
+        dataInvalidos.add(new TipoInvalido("populacao.csv", 0, 0, -1)); // dataInvalidos.get(2)
 
         System.out.println("Bem vindo ao DEISI World Meter");
         System.out.println();
         if (parseFiles(new File("Data"))) {
             int i = 0;
-
+            /*
             ArrayList country = getObjects(TipoEntidade.PAIS);
             while (i < country.size()) {
                 System.out.println(country.get(i).toString());
@@ -230,7 +228,7 @@ public class Main {
                 System.out.println(city.get(i).toString());
                 i++;
             }
-
+            */
             ArrayList inavlideType = getObjects(TipoEntidade.INPUT_INVALIDO);
             while (i < inavlideType.size()) {
                 System.out.println(inavlideType.get(i).toString());
