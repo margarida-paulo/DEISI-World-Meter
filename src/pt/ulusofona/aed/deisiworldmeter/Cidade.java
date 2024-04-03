@@ -3,13 +3,15 @@ package pt.ulusofona.aed.deisiworldmeter;
 public class Cidade {
     String alfa2;
     String cidade;
-    int regiao;
+    String regiao;
     float populacao;
     float latitude;
     float longitude;
     boolean linhaInvalida;
 
-    public Cidade(String alfa2, String cidade, int regiao, float populacao, float latitude, float longitude, boolean linhaInvalida) {
+
+
+    public Cidade(String alfa2, String cidade, String regiao, float populacao, float latitude, float longitude, boolean linhaInvalida) {
         this.alfa2 = alfa2;
         this.cidade = cidade;
         this.regiao = regiao;
