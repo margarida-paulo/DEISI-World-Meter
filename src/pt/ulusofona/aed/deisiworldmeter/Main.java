@@ -39,7 +39,7 @@ public class Main {
      */
     static boolean parseEachFile(String ficheiro, int tipoData) {
         File ficheiroLido = new File(ficheiro);
-        int linhaCount = 0;
+        int linhaCount = 1;
         Scanner scanner;
 
         try {
@@ -225,7 +225,7 @@ public class Main {
         } catch (NumberFormatException e) {
             erro = true;
         }
-        if (dataInvalidos.get(0).primeiraLinhaNaoOK == -0 && erro) {
+        if (dataInvalidos.get(0).primeiraLinhaNaoOK == -1 && erro) {
             dataInvalidos.get(0).primeiraLinhaNaoOK = linhaCount;
             dataInvalidos.get(0).numeroLinhasNaoOk++;
         }
@@ -233,7 +233,6 @@ public class Main {
             dataInvalidos.get(0).numeroLinhasNaoOk++;
             if (dataInvalidos.get(0).primeiraLinhaNaoOK == -1) {
                 dataInvalidos.get(0).primeiraLinhaNaoOK = linhaCount;
-                dataInvalidos.get(0).numeroLinhasNaoOk++;
             }
             return;
         } else {
@@ -308,7 +307,7 @@ public class Main {
     }
 
     public static void main(String[] args) {
-/*
+
         System.out.println("Bem vindo ao DEISI World Meter");
         System.out.println();
         if (parseFiles(new File("Data"))) {
@@ -336,13 +335,12 @@ public class Main {
         }
 
         System.out.println(getObjects(TipoEntidade.INPUT_INVALIDO));
-*/
 
         System.out.println("Bem vindo ao DEISI World Meter");
         System.out.println();
         if (parseFiles(new File("Data"))) {
             int i = 0;
-/*
+
             ArrayList country = getObjects(TipoEntidade.PAIS);
             while (i < country.size()) {
                 System.out.println(country.get(i).toString());
@@ -354,13 +352,124 @@ public class Main {
                 System.out.println(city.get(i).toString());
                 i++;
             }
-*/
+
+
+
             ArrayList inavlideType = getObjects(TipoEntidade.INPUT_INVALIDO);
             while (i < inavlideType.size()) {
                 System.out.println(inavlideType.get(i).toString());
                 i++;
             }
         }
+
+        System.out.println(getObjects(TipoEntidade.INPUT_INVALIDO));
+
+        System.out.println("Bem vindo ao DEISI World Meter");
+        System.out.println();
+        if (parseFiles(new File("Data"))) {
+            int i = 0;
+
+            ArrayList country = getObjects(TipoEntidade.PAIS);
+            while (i < country.size()) {
+                System.out.println(country.get(i).toString());
+                i++;
+            }
+
+            ArrayList city = getObjects(TipoEntidade.CIDADE);
+            while (i < city.size()) {
+                System.out.println(city.get(i).toString());
+                i++;
+            }
+
+
+
+            ArrayList inavlideType = getObjects(TipoEntidade.INPUT_INVALIDO);
+            while (i < inavlideType.size()) {
+                System.out.println(inavlideType.get(i).toString());
+                i++;
+            }
+        }
+
+        System.out.println(getObjects(TipoEntidade.INPUT_INVALIDO));
+
+        System.out.println("Bem vindo ao DEISI World Meter");
+        System.out.println();
+        if (parseFiles(new File("Data"))) {
+            int i = 0;
+
+            ArrayList country = getObjects(TipoEntidade.PAIS);
+            while (i < country.size()) {
+                System.out.println(country.get(i).toString());
+                i++;
+            }
+
+            ArrayList city = getObjects(TipoEntidade.CIDADE);
+            while (i < city.size()) {
+                System.out.println(city.get(i).toString());
+                i++;
+            }
+
+
+
+            ArrayList inavlideType = getObjects(TipoEntidade.INPUT_INVALIDO);
+            while (i < inavlideType.size()) {
+                System.out.println(inavlideType.get(i).toString());
+                i++;
+            }
+        }
+
+        System.out.println(getObjects(TipoEntidade.INPUT_INVALIDO));
+
+        System.out.println("Bem vindo ao DEISI World Meter");
+        System.out.println();
+        if (parseFiles(new File("Data"))) {
+            int i = 0;
+
+            ArrayList country = getObjects(TipoEntidade.PAIS);
+            while (i < country.size()) {
+                System.out.println(country.get(i).toString());
+                i++;
+            }
+
+            ArrayList city = getObjects(TipoEntidade.CIDADE);
+            while (i < city.size()) {
+                System.out.println(city.get(i).toString());
+                i++;
+            }
+
+
+
+            ArrayList inavlideType = getObjects(TipoEntidade.INPUT_INVALIDO);
+            while (i < inavlideType.size()) {
+                System.out.println(inavlideType.get(i).toString());
+                i++;
+            }
+        }
+
+        System.out.println(getObjects(TipoEntidade.INPUT_INVALIDO));
+  /*      System.out.println("Bem vindo ao DEISI World Meter");
+        System.out.println();
+        if (parseFiles(new File("Data"))) {
+            int i = 0;
+
+            ArrayList country = getObjects(TipoEntidade.PAIS);
+            while (i < country.size()) {
+                System.out.println(country.get(i).toString());
+                i++;
+            }
+
+            ArrayList city = getObjects(TipoEntidade.CIDADE);
+                      while (i < city.size()) {
+                          System.out.println(city.get(i).toString());
+                          i++;
+                     }
+
+            ArrayList inavlideType = getObjects(TipoEntidade.INPUT_INVALIDO);
+            while (i < inavlideType.size()) {
+                System.out.println(inavlideType.get(i).toString());
+                i++;
+            }
+        }*/
 /*
         System.out.println(getObjects(TipoEntidade.INPUT_INVALIDO));
 */
