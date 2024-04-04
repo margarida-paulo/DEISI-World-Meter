@@ -9,12 +9,12 @@ enum TipoEntidade {
 }
 
 public class Main {
-    public static ArrayList<Pais> dataPaises = new ArrayList<>();
-    public static ArrayList<Cidade> dataCidades = new ArrayList<>();
-    public static ArrayList<Populacao> dataPopulacao = new ArrayList<>();
-    public static ArrayList<TipoInvalido> dataInvalidos = new ArrayList<>();
+    public static ArrayList<Pais> dataPaises = new ArrayList<>(); //dataPaises, vai armazenar uma lista de objetos do tipo Pais
+    public static ArrayList<Cidade> dataCidades = new ArrayList<>(); //dataCidades, vai armazenar uma lista de objetos do tipo Cidade
+    public static ArrayList<Populacao> dataPopulacao = new ArrayList<>(); //dataPopulacao, vai armazenar uma lista de objetos do tipo Populacao
+    public static ArrayList<TipoInvalido> dataInvalidos = new ArrayList<>(); //dataInvalidos, vai armazenar uma lista de objetos do tipo TipoInvalido
 
-    static boolean alfa2EncontradoEmPaises(String alfa2) {
+    static boolean alfa2EncontradoEmPaises(String alfa2) { //alfa2EncontradoEmPaises é uma função que verifica se um determinado alfa2 está presente na lista de países (dataPaises)
         for (Pais dataPais : dataPaises) {
             if (Objects.equals(alfa2, dataPais.alfa2)) {
                 return true;
@@ -23,7 +23,7 @@ public class Main {
         return false;
     }
 
-    static boolean idEncontradoEmPaises(int id) {
+    static boolean idEncontradoEmPaises(int id) { //idEncontradoEmPaises é uma função que verifica se um determinado id está presente na lista de países (dataPaises)
         for (Pais dataPais : dataPaises) {
             if (id == dataPais.id) {
                 return true;
@@ -37,55 +37,57 @@ public class Main {
      * @param tipoData 0 -> Ficheiro de Países ; 1 -> Ficheiro de cidades ; 2 -> Ficheiro de População
      * @return False se a leitura do ficheiro falhar ou este estiver desformatado, true se estiver tudo correto.
      */
-    static boolean parseEachFile(String ficheiro, int tipoData) {
-        File ficheiroLido = new File(ficheiro);
-        int linhaCount = 1;
+    static boolean parseEachFile(String ficheiro, int tipoData) { //parseEachFile é uma função que retorna um boolean. Esta indica se o processo de análise do arquivo foi bem-sucedido ou não. Aceita dois parâmetros: ficheiro, que é o caminho para o arquivo a ser analisado, e tipoData, que indica o tipo de dados que está a ser analisado
+        File ficheiroLido = new File(ficheiro); //Criamos um novo objeto File com base no caminho do arquivo fornecido.
+        int linhaCount = 0;
         Scanner scanner;
 
-        try {
+        try { //Com o scanner tentamos ler o arquivo que foi fornecido e tentamos apanhar o erro "FileNotFoundException" (se o arquivo não foi encontrado). Em caso de ser apanhado retornamos false e sabemos que a análise do arquivo falhou.
             scanner = new Scanner(ficheiroLido);
         } catch (FileNotFoundException e) {
             return false;
         }
 
-        if (scanner.hasNext()) { // não nos interessa a primeira linha de cada ficheiro
-            scanner.nextLine();
+        if (scanner.hasNext()) { //não nos interessa a primeira linha de cada ficheiro
+            if (linhaCount == 0) { //verificamos se é a primeira linha
+                scanner.nextLine(); //ignoramos a primeira linha
+            } else {
+                scanner.nextLine();
+            }
             linhaCount++;
         }
 
-        while (scanner.hasNext()) {
+        while (scanner.hasNext()) { //Entramos num loop enquanto existirem linhas no arquivo
 
             boolean erro = false;
-            String linha = scanner.nextLine();
-            String[] linhaDividida = linha.split(",");
-            switch (tipoData) {
+            String linha = scanner.nextLine(); //lemos a proxima linha do arquivo
+            String[] linhaDividida = linha.split(","); //dividimos a linha em partes separadas, com base na virgula e estas ficam armazenadas num array
+            switch (tipoData) { //Utilizamos um switch-case para determinarmos que tipo de dados está a ser analisado
                 case 0 -> newPais(linhaDividida, erro, linhaCount);
                 case 1 -> newCidade(linhaDividida, erro, linhaCount);
                 case 2 -> newPopulacao(linhaDividida, erro, linhaCount);
             }
-            linhaCount++;
+            linhaCount++; //incrementamos as linhas a cada iteração do loop
         }
-        return true;
+        return true; //retornamos true caso as análises tenham sido bem sucedidas
     }
 
     private static void newPopulacao(String[] linhaDividida, boolean erro, int linhaCount) {
         for (int i = 0; i < linhaDividida.length; i++) {
-            if (linhaDividida[i] == null || linhaDividida[i].isEmpty()) {
-                if (dataInvalidos.get(2).primeiraLinhaNaoOK == -1) {
-                    dataInvalidos.get(2).primeiraLinhaNaoOK = linhaCount;
-                    dataInvalidos.get(2).numeroLinhasNaoOk++;
-                } else {
-                    dataInvalidos.get(2).numeroLinhasNaoOk++;
-                }
-                return; // se alguma posiºão estiver vazia, consideramos automaticamente como uma linha inválida e saímos logo
+            if (linhaDividida[i].isEmpty() && dataInvalidos.get(0).primeiraLinhaNaoOK == -1) {
+                dataInvalidos.get(2).numeroLinhasNaoOk++;
+                dataInvalidos.get(2).primeiraLinhaNaoOK = linhaCount;
+                return;
+            } else if (linhaDividida[i].isEmpty()) {
+                dataInvalidos.get(2).numeroLinhasNaoOk++;
+                return;
             }
         }
 
-        // se estiver tudo bem continuamos o nosso processo normal
         if (linhaDividida.length != 5) {
+            dataInvalidos.get(2).numeroLinhasNaoOk++;
             if (dataInvalidos.get(2).primeiraLinhaNaoOK == -1) {
                 dataInvalidos.get(2).primeiraLinhaNaoOK = linhaCount;
-                dataInvalidos.get(2).numeroLinhasNaoOk++;
             }
             return;
         }
@@ -137,22 +139,20 @@ public class Main {
 
     private static void newCidade(String[] linhaDividida, boolean erro, int linhaCount) {
         for (int i = 0; i < linhaDividida.length; i++) {
-            if (linhaDividida[i] == null || linhaDividida[i].isEmpty()) {
-                if (dataInvalidos.get(1).primeiraLinhaNaoOK == -1) {
-                    dataInvalidos.get(1).primeiraLinhaNaoOK = linhaCount;
-                    dataInvalidos.get(1).numeroLinhasNaoOk++;
-                } else {
-                    dataInvalidos.get(1).numeroLinhasNaoOk++;
-                }
-                return; // se alguma posiºão estiver vazia, consideramos automaticamente como uma linha inválida e saímos logo
+            if (linhaDividida[i].isEmpty() && dataInvalidos.get(0).primeiraLinhaNaoOK == -1) {
+                dataInvalidos.get(1).numeroLinhasNaoOk++;
+                dataInvalidos.get(1).primeiraLinhaNaoOK = linhaCount;
+                return;
+            } else if (linhaDividida[i].isEmpty()) {
+                dataInvalidos.get(1).numeroLinhasNaoOk++;
+                return;
             }
         }
 
-        // se estiver tudo bem continuamos o nosso processo normal
         if (linhaDividida.length != 6) {
+            dataInvalidos.get(1).numeroLinhasNaoOk++;
             if (dataInvalidos.get(1).primeiraLinhaNaoOK == -1) {
                 dataInvalidos.get(1).primeiraLinhaNaoOK = linhaCount;
-                dataInvalidos.get(1).numeroLinhasNaoOk++;
             }
             return;
         }
@@ -183,6 +183,7 @@ public class Main {
 
         if (dataInvalidos.get(1).primeiraLinhaNaoOK == -1 && erro) {
             dataInvalidos.get(1).primeiraLinhaNaoOK = linhaCount;
+            dataInvalidos.get(1).numeroLinhasNaoOk++;
         }
         if (erro || !alfa2EncontradoEmPaises(linhaDividida[0])) {
             dataInvalidos.get(1).numeroLinhasNaoOk++;
@@ -199,24 +200,20 @@ public class Main {
 
     private static void newPais(String[] linhaDividida, boolean erro, int linhaCount) {
         for (int i = 0; i < linhaDividida.length; i++) {
-            if (linhaDividida[i] == null || linhaDividida[i].isEmpty()) {
-                if (dataInvalidos.get(0).primeiraLinhaNaoOK == -1) {
-                    dataInvalidos.get(0).primeiraLinhaNaoOK = linhaCount;
-                    dataInvalidos.get(0).numeroLinhasNaoOk++;
-                } else {
-                    dataInvalidos.get(0).numeroLinhasNaoOk++;
-                }
-                return; // se alguma posiºão estiver vazia, consideramos automaticamente como uma linha inválida e saímos logo
+            if (linhaDividida[i].isEmpty() && dataInvalidos.get(0).primeiraLinhaNaoOK == -1) {
+                dataInvalidos.get(0).numeroLinhasNaoOk++;
+                dataInvalidos.get(0).primeiraLinhaNaoOK = linhaCount;
+                return;
+            } else if (linhaDividida[i].isEmpty()) {
+                dataInvalidos.get(0).numeroLinhasNaoOk++;
+                return;
             }
         }
 
-        // se estiver tudo bem continuamos o nosso processo normal
         if (linhaDividida.length != 4) {
+            dataInvalidos.get(0).numeroLinhasNaoOk++;
             if (dataInvalidos.get(0).primeiraLinhaNaoOK == -1) {
                 dataInvalidos.get(0).primeiraLinhaNaoOK = linhaCount;
-                dataInvalidos.get(0).numeroLinhasNaoOk++;
-            } else {
-                dataInvalidos.get(0).numeroLinhasNaoOk++;
             }
             return;
         }
@@ -312,167 +309,26 @@ public class Main {
         System.out.println();
         if (parseFiles(new File("Data"))) {
             int i = 0;
-
-            ArrayList country = getObjects(TipoEntidade.PAIS);
-            while (i < country.size()) {
-                System.out.println(country.get(i).toString());
-                i++;
-            }
-
-            ArrayList city = getObjects(TipoEntidade.CIDADE);
-            while (i < city.size()) {
-                System.out.println(city.get(i).toString());
-                i++;
-            }
-
-
-
-            ArrayList inavlideType = getObjects(TipoEntidade.INPUT_INVALIDO);
-            while (i < inavlideType.size()) {
-                System.out.println(inavlideType.get(i).toString());
-                i++;
-            }
-        }
-
-        System.out.println(getObjects(TipoEntidade.INPUT_INVALIDO));
-
-        System.out.println("Bem vindo ao DEISI World Meter");
-        System.out.println();
-        if (parseFiles(new File("Data"))) {
-            int i = 0;
-
-            ArrayList country = getObjects(TipoEntidade.PAIS);
-            while (i < country.size()) {
-                System.out.println(country.get(i).toString());
-                i++;
-            }
-
-            ArrayList city = getObjects(TipoEntidade.CIDADE);
-            while (i < city.size()) {
-                System.out.println(city.get(i).toString());
-                i++;
-            }
-
-
-
-            ArrayList inavlideType = getObjects(TipoEntidade.INPUT_INVALIDO);
-            while (i < inavlideType.size()) {
-                System.out.println(inavlideType.get(i).toString());
-                i++;
-            }
-        }
-
-        System.out.println(getObjects(TipoEntidade.INPUT_INVALIDO));
-
-        System.out.println("Bem vindo ao DEISI World Meter");
-        System.out.println();
-        if (parseFiles(new File("Data"))) {
-            int i = 0;
-
-            ArrayList country = getObjects(TipoEntidade.PAIS);
-            while (i < country.size()) {
-                System.out.println(country.get(i).toString());
-                i++;
-            }
-
-            ArrayList city = getObjects(TipoEntidade.CIDADE);
-            while (i < city.size()) {
-                System.out.println(city.get(i).toString());
-                i++;
-            }
-
-
-
-            ArrayList inavlideType = getObjects(TipoEntidade.INPUT_INVALIDO);
-            while (i < inavlideType.size()) {
-                System.out.println(inavlideType.get(i).toString());
-                i++;
-            }
-        }
-
-        System.out.println(getObjects(TipoEntidade.INPUT_INVALIDO));
-
-        System.out.println("Bem vindo ao DEISI World Meter");
-        System.out.println();
-        if (parseFiles(new File("Data"))) {
-            int i = 0;
-
-            ArrayList country = getObjects(TipoEntidade.PAIS);
-            while (i < country.size()) {
-                System.out.println(country.get(i).toString());
-                i++;
-            }
-
-            ArrayList city = getObjects(TipoEntidade.CIDADE);
-            while (i < city.size()) {
-                System.out.println(city.get(i).toString());
-                i++;
-            }
-
-
-
-            ArrayList inavlideType = getObjects(TipoEntidade.INPUT_INVALIDO);
-            while (i < inavlideType.size()) {
-                System.out.println(inavlideType.get(i).toString());
-                i++;
-            }
-        }
-
-        System.out.println(getObjects(TipoEntidade.INPUT_INVALIDO));
-
-        System.out.println("Bem vindo ao DEISI World Meter");
-        System.out.println();
-        if (parseFiles(new File("Data"))) {
-            int i = 0;
-
-            ArrayList country = getObjects(TipoEntidade.PAIS);
-            while (i < country.size()) {
-                System.out.println(country.get(i).toString());
-                i++;
-            }
-
-            ArrayList city = getObjects(TipoEntidade.CIDADE);
-            while (i < city.size()) {
-                System.out.println(city.get(i).toString());
-                i++;
-            }
-
-
-
-            ArrayList inavlideType = getObjects(TipoEntidade.INPUT_INVALIDO);
-            while (i < inavlideType.size()) {
-                System.out.println(inavlideType.get(i).toString());
-                i++;
-            }
-        }
-
-        System.out.println(getObjects(TipoEntidade.INPUT_INVALIDO));
-  /*      System.out.println("Bem vindo ao DEISI World Meter");
-        System.out.println();
-        if (parseFiles(new File("Data"))) {
-            int i = 0;
-
-            ArrayList country = getObjects(TipoEntidade.PAIS);
-            while (i < country.size()) {
-                System.out.println(country.get(i).toString());
-                i++;
-            }
-
-            ArrayList city = getObjects(TipoEntidade.CIDADE);
-                      while (i < city.size()) {
-                          System.out.println(city.get(i).toString());
-                          i++;
-                     }
-
-            ArrayList inavlideType = getObjects(TipoEntidade.INPUT_INVALIDO);
-            while (i < inavlideType.size()) {
-                System.out.println(inavlideType.get(i).toString());
-                i++;
-            }
-        }*/
 /*
-        System.out.println(getObjects(TipoEntidade.INPUT_INVALIDO));
-*/
-    }
+            ArrayList country = getObjects(TipoEntidade.PAIS);
+            while (i < country.size()) {
+                System.out.println(country.get(i).toString());
+                i++;
+            }
 
+            ArrayList city = getObjects(TipoEntidade.CIDADE);
+            while (i < city.size()) {
+                System.out.println(city.get(i).toString());
+                i++;
+            }
+ */
+
+            ArrayList inavlideType = getObjects(TipoEntidade.INPUT_INVALIDO);
+            while (i < inavlideType.size()) {
+                System.out.println(inavlideType.get(i).toString());
+                i++;
+            }
+
+        }
+    }
 }

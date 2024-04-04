@@ -12,7 +12,7 @@ import static pt.ulusofona.aed.deisiworldmeter.TipoEntidade.INPUT_INVALIDO;
 
 public class TestMain {
     @Test
-    public void parseFilesCidadesTest(){
+    public void parseFilesCidadesTest() {
         Main.parseFiles(new File("test-files"));
         Assertions.assertEquals(8, Main.getObjects(CIDADE).size());
         Main.parseFiles(new File("test-files"));
@@ -20,7 +20,7 @@ public class TestMain {
     }
 
     @Test
-    public void parseFilesPaisesRepetidos(){
+    public void parseFilesPaisesRepetidos() {
         Main.parseFiles(new File("test-files"));
         Assertions.assertEquals(6, Main.getObjects(PAIS).size());
         Main.parseFiles(new File("test-files"));
@@ -28,7 +28,7 @@ public class TestMain {
     }
 
     @Test
-    public void paisesIdMaior700(){
+    public void paisesIdMaior700() {
         Main.parseFiles(new File("test-files"));
         Assertions.assertEquals("Suécia | 752 | SE | SWE | 151", Main.getObjects(PAIS).get(5));
         Main.parseFiles(new File("test-files"));
@@ -36,7 +36,7 @@ public class TestMain {
     }
 
     @Test
-    public void paisesIdMenor700(){
+    public void paisesIdMenor700() {
         Main.parseFiles(new File("test-files"));
         Assertions.assertEquals("Afeganistão | 4 | AF | AFG", Main.getObjects(PAIS).get(0));
         Main.parseFiles(new File("test-files"));
@@ -44,7 +44,7 @@ public class TestMain {
     }
 
     @Test
-    public void cidadesParaString(){
+    public void cidadesParaString() {
         Main.parseFiles(new File("test-files"));
         Assertions.assertEquals("andorra la vella | DE | 07 | 20430 | (42.5,1.5166667)", Main.getObjects(CIDADE).get(0));
         Main.parseFiles(new File("test-files"));
@@ -52,7 +52,7 @@ public class TestMain {
     }
 
     @Test
-    public void paisesECidades(){
+    public void paisesECidades() {
         Main.parseFiles(new File("test-files"));
         Assertions.assertEquals("Afeganistão | 4 | AF | AFG", Main.getObjects(PAIS).get(0));
         Assertions.assertEquals("África do Sul | 710 | ZA | ZAF | 0", Main.getObjects(PAIS).get(1));
@@ -70,15 +70,23 @@ public class TestMain {
     }
 
     @Test
-    public void linhasInvalidzs(){
+    public void linhasInvalidas() {
         Main.parseFiles(new File("test-files"));
-        Assertions.assertEquals("paises.csv | 6 | 2 | 6", Main.getObjects(INPUT_INVALIDO).get(0));
-        Assertions.assertEquals("cidades.csv | 8 | 1 | 5", Main.getObjects(INPUT_INVALIDO).get(1));
-        Assertions.assertEquals("populacao.csv | 151 | 5 | 2", Main.getObjects(INPUT_INVALIDO).get(2));
+        Assertions.assertEquals("paises.csv | 3 | 2 | 4", Main.getObjects(INPUT_INVALIDO).get(0));
+        Assertions.assertEquals("cidades.csv | 8 | 1 | 4", Main.getObjects(INPUT_INVALIDO).get(1));
+        Assertions.assertEquals("populacao.csv | 151 | 5 | 1", Main.getObjects(INPUT_INVALIDO).get(2));
         Main.parseFiles(new File("test-files"));
-        Assertions.assertEquals("paises.csv | 6 | 2 | 6", Main.getObjects(INPUT_INVALIDO).get(0));
-        Assertions.assertEquals("cidades.csv | 8 | 1 | 5", Main.getObjects(INPUT_INVALIDO).get(1));
-        Assertions.assertEquals("populacao.csv | 151 | 5 | 2", Main.getObjects(INPUT_INVALIDO).get(2));
+        Assertions.assertEquals("paises.csv | 4 | 2 | 5", Main.getObjects(INPUT_INVALIDO).get(0));
+        Assertions.assertEquals("cidades.csv | 8 | 1 | 4", Main.getObjects(INPUT_INVALIDO).get(1));
+        Assertions.assertEquals("populacao.csv | 151 | 5 | 1", Main.getObjects(INPUT_INVALIDO).get(2));
 
+    }
+
+    @Test
+    public void linha() {
+        Main.parseFiles(new File("test-files"));
+        Assertions.assertEquals("paises.csv | 6 | 3 | 5", Main.getObjects(INPUT_INVALIDO).get(0));
+        Main.parseFiles(new File("test-files"));
+        Assertions.assertEquals("paises.csv | 6 | 3 | 5", Main.getObjects(INPUT_INVALIDO).get(0));
     }
 }
