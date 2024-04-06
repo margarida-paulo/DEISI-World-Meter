@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import static pt.ulusofona.aed.deisiworldmeter.TipoEntidade.CIDADE;
 import static pt.ulusofona.aed.deisiworldmeter.TipoEntidade.PAIS;
@@ -30,9 +31,9 @@ public class TestMain {
     @Test
     public void paisesIdMaior700() {
         Main.parseFiles(new File("test-files"));
-        Assertions.assertEquals("Suécia | 752 | SE | SWE | 151", Main.getObjects(PAIS).get(5));
+        Assertions.assertEquals("Suécia | 752 | SE | SWE | 151", Main.getObjects(PAIS).get(4));
         Main.parseFiles(new File("test-files"));
-        Assertions.assertEquals("Suécia | 752 | SE | SWE | 151", Main.getObjects(PAIS).get(5));
+        Assertions.assertEquals("Suécia | 752 | SE | SWE | 151", Main.getObjects(PAIS).get(4));
     }
 
     @Test
@@ -72,21 +73,59 @@ public class TestMain {
     @Test
     public void linhasInvalidas() {
         Main.parseFiles(new File("test-files"));
-        Assertions.assertEquals("paises.csv | 3 | 2 | 4", Main.getObjects(INPUT_INVALIDO).get(0));
-        Assertions.assertEquals("cidades.csv | 8 | 1 | 4", Main.getObjects(INPUT_INVALIDO).get(1));
-        Assertions.assertEquals("populacao.csv | 151 | 5 | 1", Main.getObjects(INPUT_INVALIDO).get(2));
+        Assertions.assertEquals("paises.csv | 6 | 5 | 6", Main.getObjects(INPUT_INVALIDO).get(0));
+        Assertions.assertEquals("cidades.csv | 8 | 1 | 5", Main.getObjects(INPUT_INVALIDO).get(1));
+        Assertions.assertEquals("populacao.csv | 151 | 5 | 2", Main.getObjects(INPUT_INVALIDO).get(2));
         Main.parseFiles(new File("test-files"));
-        Assertions.assertEquals("paises.csv | 4 | 2 | 5", Main.getObjects(INPUT_INVALIDO).get(0));
-        Assertions.assertEquals("cidades.csv | 8 | 1 | 4", Main.getObjects(INPUT_INVALIDO).get(1));
-        Assertions.assertEquals("populacao.csv | 151 | 5 | 1", Main.getObjects(INPUT_INVALIDO).get(2));
+        Assertions.assertEquals("paises.csv | 6 | 5 | 6", Main.getObjects(INPUT_INVALIDO).get(0));
+        Assertions.assertEquals("cidades.csv | 8 | 1 | 5", Main.getObjects(INPUT_INVALIDO).get(1));
+        Assertions.assertEquals("populacao.csv | 151 | 5 | 2", Main.getObjects(INPUT_INVALIDO).get(2));
 
     }
 
     @Test
     public void linha() {
         Main.parseFiles(new File("test-files"));
-        Assertions.assertEquals("paises.csv | 6 | 3 | 5", Main.getObjects(INPUT_INVALIDO).get(0));
+        Assertions.assertEquals("paises.csv | 6 | 5 | 6", Main.getObjects(INPUT_INVALIDO).get(0));
         Main.parseFiles(new File("test-files"));
-        Assertions.assertEquals("paises.csv | 6 | 3 | 5", Main.getObjects(INPUT_INVALIDO).get(0));
+        Assertions.assertEquals("paises.csv | 6 | 5 | 6", Main.getObjects(INPUT_INVALIDO).get(0));
+    }
+
+    /*
+    @Test
+    public void bigFiles(){
+        Main.parseFiles(new File("Data"));
+        ArrayList<String> paises = Main.getObjects(PAIS);
+        for (int i = 0; i < paises.size(); i++){
+            System.out.println((i + 2) + " " + Main.getObjects(PAIS).get(i));
+        }
+        System.out.println("\n\nSECOND TIME:\n\n");
+        for (int i = 0; i < paises.size(); i++){
+            System.out.println((i + 2) + " " + Main.getObjects(PAIS).get(i));
+        }
+        Assertions.assertEquals("Suécia | 752 | SE | SWE | 151", Main.getObjects(PAIS).get(170));
+        Main.parseFiles(new File("Data"));
+        Assertions.assertEquals("Suécia | 752 | SE | SWE | 151", Main.getObjects(PAIS).get(170));
+        Main.parseFiles(new File("Data"));
+        Assertions.assertEquals("Suécia | 752 | SE | SWE | 151", Main.getObjects(PAIS).get(170));
+    }
+
+     */
+
+
+    @Test
+    public void linhasIncorretas(){
+        Main.parseFiles(new File("Data"));
+        System.out.println(Main.getObjects(INPUT_INVALIDO));
+
+        Main.parseFiles(new File("Data"));
+        System.out.println(Main.getObjects(INPUT_INVALIDO));
+        Main.parseFiles(new File("Data"));
+        ArrayList<String> cidades = Main.getObjects(CIDADE);
+        System.out.println(Main.getObjects(INPUT_INVALIDO));
+        System.out.println(Main.getObjects(INPUT_INVALIDO));
+  //      for (int i = 0; i < cidades.size(); i++){
+  //          System.out.println((i + 2) + " " + Main.getObjects(CIDADE).get(i));
+   //     }
     }
 }

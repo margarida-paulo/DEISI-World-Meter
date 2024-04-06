@@ -39,7 +39,7 @@ public class Main {
      */
     static boolean parseEachFile(String ficheiro, int tipoData) { //parseEachFile é uma função que retorna um boolean. Esta indica se o processo de análise do arquivo foi bem-sucedido ou não. Aceita dois parâmetros: ficheiro, que é o caminho para o arquivo a ser analisado, e tipoData, que indica o tipo de dados que está a ser analisado
         File ficheiroLido = new File(ficheiro); //Criamos um novo objeto File com base no caminho do arquivo fornecido.
-        int linhaCount = 0;
+        int linhaCount = 1;
         Scanner scanner;
 
         try { //Com o scanner tentamos ler o arquivo que foi fornecido e tentamos apanhar o erro "FileNotFoundException" (se o arquivo não foi encontrado). Em caso de ser apanhado retornamos false e sabemos que a análise do arquivo falhou.
@@ -49,7 +49,7 @@ public class Main {
         }
 
         if (scanner.hasNext()) { //não nos interessa a primeira linha de cada ficheiro
-            if (linhaCount == 0) { //verificamos se é a primeira linha
+            if (linhaCount == 1) { //verificamos se é a primeira linha
                 scanner.nextLine(); //ignoramos a primeira linha
             } else {
                 scanner.nextLine();
@@ -73,8 +73,9 @@ public class Main {
     }
 
     private static void newPopulacao(String[] linhaDividida, boolean erro, int linhaCount) {
+
         for (int i = 0; i < linhaDividida.length; i++) {
-            if (linhaDividida[i].isEmpty() && dataInvalidos.get(0).primeiraLinhaNaoOK == -1) {
+            if (linhaDividida[i].isEmpty() && dataInvalidos.get(2).primeiraLinhaNaoOK == -1) {
                 dataInvalidos.get(2).numeroLinhasNaoOk++;
                 dataInvalidos.get(2).primeiraLinhaNaoOK = linhaCount;
                 return;
@@ -138,8 +139,9 @@ public class Main {
     }
 
     private static void newCidade(String[] linhaDividida, boolean erro, int linhaCount) {
+
         for (int i = 0; i < linhaDividida.length; i++) {
-            if (linhaDividida[i].isEmpty() && dataInvalidos.get(0).primeiraLinhaNaoOK == -1) {
+            if (linhaDividida[i].isEmpty() && dataInvalidos.get(1).primeiraLinhaNaoOK == -1) {
                 dataInvalidos.get(1).numeroLinhasNaoOk++;
                 dataInvalidos.get(1).primeiraLinhaNaoOK = linhaCount;
                 return;
@@ -155,12 +157,6 @@ public class Main {
                 dataInvalidos.get(1).primeiraLinhaNaoOK = linhaCount;
             }
             return;
-        }
-
-        try {
-            Integer.parseInt(linhaDividida[2]);
-        } catch (NumberFormatException e) {
-            erro = true;
         }
 
         try {
@@ -181,10 +177,6 @@ public class Main {
             erro = true;
         }
 
-        if (dataInvalidos.get(1).primeiraLinhaNaoOK == -1 && erro) {
-            dataInvalidos.get(1).primeiraLinhaNaoOK = linhaCount;
-            dataInvalidos.get(1).numeroLinhasNaoOk++;
-        }
         if (erro || !alfa2EncontradoEmPaises(linhaDividida[0])) {
             dataInvalidos.get(1).numeroLinhasNaoOk++;
             if (dataInvalidos.get(1).primeiraLinhaNaoOK == -1) {
@@ -194,11 +186,11 @@ public class Main {
         } else {
             dataInvalidos.get(1).numeroLinhasOk++;
         }
-        dataCidades.add(new Cidade(linhaDividida[0], linhaDividida[1], linhaDividida[2], Float.parseFloat(linhaDividida[3]), (linhaDividida[4]), (linhaDividida[5]), erro));
-        return;
+        dataCidades.add(new Cidade(linhaDividida[0], linhaDividida[1], linhaDividida[2], Float.parseFloat(linhaDividida[3]), linhaDividida[4], linhaDividida[5], erro));
     }
 
     private static void newPais(String[] linhaDividida, boolean erro, int linhaCount) {
+
         for (int i = 0; i < linhaDividida.length; i++) {
             if (linhaDividida[i].isEmpty() && dataInvalidos.get(0).primeiraLinhaNaoOK == -1) {
                 dataInvalidos.get(0).numeroLinhasNaoOk++;
@@ -280,6 +272,7 @@ public class Main {
 
         if (tipo == TipoEntidade.PAIS) {
             for (Pais dataPais : dataPaises) {
+                dataPais.indicadoresEstatisticos = 0;
                 if (dataPais.id > 700) {
                     for (Populacao dataPop : dataPopulacao) {
                         if (dataPop.id == dataPais.id) {
@@ -295,9 +288,9 @@ public class Main {
 
         if (tipo == TipoEntidade.CIDADE) {
             for (Cidade dataCidade : dataCidades) {
-                if (!dataCidade.linhaInvalida) {
+             //   if (!dataCidade.linhaInvalida) {
                     novaInformacao.add(dataCidade.toString());
-                }
+             //   }
             }
         }
         return novaInformacao;

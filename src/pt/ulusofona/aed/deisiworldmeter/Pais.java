@@ -10,7 +10,7 @@ public class Pais {
     String nome;
     boolean linhaInvalida;
 
-    int indicadoresEstatisticos = 0;
+    int indicadoresEstatisticos;
 
 
     public Pais(int id, String alfa2, String alfa3, String nome, boolean linhaInvalida, int indicadoresEstatisticos) {
