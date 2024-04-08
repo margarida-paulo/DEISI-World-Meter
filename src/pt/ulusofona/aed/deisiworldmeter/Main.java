@@ -141,11 +141,11 @@ public class Main {
     private static void newCidade(String[] linhaDividida, boolean erro, int linhaCount) {
 
         for (int i = 0; i < linhaDividida.length; i++) {
-            if (linhaDividida[i].isEmpty() && dataInvalidos.get(1).primeiraLinhaNaoOK == -1) {
+            if (linhaDividida[i].isEmpty() && i != 1 && dataInvalidos.get(1).primeiraLinhaNaoOK == -1) {
                 dataInvalidos.get(1).numeroLinhasNaoOk++;
                 dataInvalidos.get(1).primeiraLinhaNaoOK = linhaCount;
                 return;
-            } else if (linhaDividida[i].isEmpty()) {
+            } else if (linhaDividida[i].isEmpty() && i != 1) {
                 dataInvalidos.get(1).numeroLinhasNaoOk++;
                 return;
             }
@@ -321,6 +321,7 @@ public class Main {
                 System.out.println(inavlideType.get(i).toString());
                 i++;
             }
+            System.out.println(getObjects(TipoEntidade.CIDADE).size());
 
         }
     }

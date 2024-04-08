@@ -21,6 +21,6 @@ public class Cidade {
     }
 
     public String toString() {
-        return cidade + " | " + alfa2.toUpperCase() + " | " + regiao + " | " + (int) populacao + " | (" + latitude + "," + longitude + ") ERRO:" + linhaInvalida;
+        return cidade + " | " + alfa2.toUpperCase() + " | " + regiao + " | " + (int) populacao + " | (" + latitude + "," + longitude + ")";
     }
 }
