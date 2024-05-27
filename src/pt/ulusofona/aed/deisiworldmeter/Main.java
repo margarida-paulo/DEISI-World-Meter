@@ -13,7 +13,9 @@ public class Main {
     public static ArrayList<Cidade> dataCidades = new ArrayList<>(); //dataCidades, vai armazenar uma lista de objetos do tipo Cidade
     public static ArrayList<Populacao> dataPopulacao = new ArrayList<>(); //dataPopulacao, vai armazenar uma lista de objetos do tipo Populacao
     public static ArrayList<TipoInvalido> dataInvalidos = new ArrayList<>(); //dataInvalidos, vai armazenar uma lista de objetos do tipo TipoInvalido
+    public static ArrayList<Cidade> citiesSortedByPopulation = new ArrayList<>();
 
+    public static HashMap<String, String> countriesByAlfa2 = new HashMap<>();
     static boolean alfa2EncontradoEmPaises(String alfa2) { //alfa2EncontradoEmPaises é uma função que verifica se um determinado alfa2 está presente na lista de países (dataPaises)
         for (Pais dataPais : dataPaises) {
             if (Objects.equals(alfa2, dataPais.alfa2)) {
@@ -141,11 +143,11 @@ public class Main {
     private static void newCidade(String[] linhaDividida, boolean erro, int linhaCount) {
 
         for (int i = 0; i < linhaDividida.length; i++) {
-            if (linhaDividida[i].isEmpty() && i != 1 && dataInvalidos.get(1).primeiraLinhaNaoOK == -1) {
+            if (linhaDividida[i].isEmpty() && dataInvalidos.get(1).primeiraLinhaNaoOK == -1) {
                 dataInvalidos.get(1).numeroLinhasNaoOk++;
                 dataInvalidos.get(1).primeiraLinhaNaoOK = linhaCount;
                 return;
-            } else if (linhaDividida[i].isEmpty() && i != 1) {
+            } else if (linhaDividida[i].isEmpty()) {
                 dataInvalidos.get(1).numeroLinhasNaoOk++;
                 return;
             }
@@ -236,6 +238,8 @@ public class Main {
         dataCidades.clear();
         dataPopulacao.clear();
         dataInvalidos.clear();
+        citiesSortedByPopulation.clear();
+        countriesByAlfa2.clear();
 
         dataInvalidos.add(new TipoInvalido("paises.csv", 0, 0, -1)); // dataInvalidos.get(0)
         dataInvalidos.add(new TipoInvalido("cidades.csv", 0, 0, -1)); // dataInvalidos.get(1)
@@ -257,6 +261,32 @@ public class Main {
         if (!parseEachFile(pasta + "/populacao.csv", 2)) {
             return false;
         }
+
+        // Make a sorted cities arrayList
+
+        Iterator<Pais> iterator = dataPaises.iterator();
+        while (iterator.hasNext()) {
+            Pais dataPais = iterator.next();
+            boolean foundCity = false;
+            for (Cidade dataCidade : dataCidades) {
+                if (Objects.equals(dataCidade.alfa2, dataPais.alfa2)) {
+                    foundCity = true;
+                    break;
+                }
+            }
+            if (!foundCity) {
+                iterator.remove();
+            }
+            else {
+                countriesByAlfa2.put(dataPais.alfa2, dataPais.nome);
+            }
+        }
+
+        citiesSortedByPopulation = new ArrayList<>();
+        for (Cidade dataCidade : dataCidades) {
+            citiesSortedByPopulation.add(new Cidade(dataCidade.alfa2, dataCidade.cidade, dataCidade.regiao, dataCidade.populacao, dataCidade.latitude, dataCidade.longitude, false));
+        }
+        citiesSortedByPopulation.sort(Comparator.comparing((Cidade c) -> c.populacao).reversed());
         return true;
     }
 
@@ -296,6 +326,27 @@ public class Main {
         return novaInformacao;
     }
 
+    public static Result execute(String comando){
+
+        String[] comandoComArgs = comando.split(" ");
+
+        switch (comandoComArgs[0]){
+            case "HELP"->{
+                return new Result(true, null, ExecutionFunctions.helpCommand());
+            }
+            case "COUNT_CITIES"->{
+                return new Result(true, null, ExecutionFunctions.countCities(comandoComArgs));
+            }
+            case "GET_CITIES_BY_COUNTRY"->{
+                //STILL NOT IMPLEMENTED!
+                return new Result(true, null, ExecutionFunctions.getCitiesByCountry(comandoComArgs));
+            }
+            default -> {
+                return new Result(false, "Comando invalido", null);
+            }
+        }
+    }
+
     public static void main(String[] args) {
 
         System.out.println("Bem vindo ao DEISI World Meter");
@@ -316,9 +367,9 @@ public class Main {
             }
  */
 
-            ArrayList inavlideType = getObjects(TipoEntidade.INPUT_INVALIDO);
-            while (i < inavlideType.size()) {
-                System.out.println(inavlideType.get(i).toString());
+            ArrayList invalideType = getObjects(TipoEntidade.INPUT_INVALIDO);
+            while (i < invalideType.size()) {
+                System.out.println(invalideType.get(i).toString());
                 i++;
             }
             System.out.println(getObjects(TipoEntidade.CIDADE).size());
