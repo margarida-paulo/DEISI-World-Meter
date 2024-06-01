@@ -16,6 +16,7 @@ public class Main {
     public static ArrayList<Cidade> citiesSortedByPopulation = new ArrayList<>();
 
     public static HashMap<String, String> countriesByAlfa2 = new HashMap<>();
+
     static boolean alfa2EncontradoEmPaises(String alfa2) { //alfa2EncontradoEmPaises é uma função que verifica se um determinado alfa2 está presente na lista de países (dataPaises)
         for (Pais dataPais : dataPaises) {
             if (Objects.equals(alfa2, dataPais.alfa2)) {
@@ -276,8 +277,7 @@ public class Main {
             }
             if (!foundCity) {
                 iterator.remove();
-            }
-            else {
+            } else {
                 countriesByAlfa2.put(dataPais.alfa2, dataPais.nome);
             }
         }
@@ -318,27 +318,26 @@ public class Main {
 
         if (tipo == TipoEntidade.CIDADE) {
             for (Cidade dataCidade : dataCidades) {
-             //   if (!dataCidade.linhaInvalida) {
-                    novaInformacao.add(dataCidade.toString());
-             //   }
+                //   if (!dataCidade.linhaInvalida) {
+                novaInformacao.add(dataCidade.toString());
+                //   }
             }
         }
         return novaInformacao;
     }
 
-    public static Result execute(String comando){
+    public static Result execute(String comando) {
 
         String[] comandoComArgs = comando.split(" ");
 
-        switch (comandoComArgs[0]){
-            case "HELP"->{
+        switch (comandoComArgs[0]) {
+            case "HELP" -> {
                 return new Result(true, null, ExecutionFunctions.helpCommand());
             }
-            case "COUNT_CITIES"->{
+            case "COUNT_CITIES" -> {
                 return new Result(true, null, ExecutionFunctions.countCities(comandoComArgs));
             }
-            case "GET_CITIES_BY_COUNTRY"->{
-                //STILL NOT IMPLEMENTED!
+            case "GET_CITIES_BY_COUNTRY" -> {
                 return new Result(true, null, ExecutionFunctions.getCitiesByCountry(comandoComArgs));
             }
             default -> {
@@ -348,12 +347,49 @@ public class Main {
     }
 
     public static void main(String[] args) {
+        System.out.println("Welcome to DEISI World Meter");
 
+        long start = System.currentTimeMillis();
+        boolean parseOk = parseFiles(new File("Data"));
+        if (!parseOk) {
+            System.out.println("Error loading files");
+            return;
+        }
+        long end = System.currentTimeMillis();
+
+        System.out.println("Loaded files in " + (end - start) + " ms");
+
+        Result result = execute("HELP");
+        System.out.println(result.result);
+
+        Scanner in = new Scanner(System.in);
+
+        String line;
+        do {
+            System.out.print("> ");
+            line = in.nextLine();
+
+            if (line != null && !line.equals("QUIT")) {
+                start = System.currentTimeMillis();
+                result = execute(line);
+                end = System.currentTimeMillis();
+
+                if (!result.success) {
+                    System.out.println("Error: " + result.error);
+                } else {
+                    System.out.println(result.result);
+                    System.out.println("(took " + (end - start) + " ms)");
+                }
+            }
+        } while (line != null && !line.equals("QUIT"));
+    }
+}
+        /*
         System.out.println("Bem vindo ao DEISI World Meter");
         System.out.println();
         if (parseFiles(new File("Data"))) {
             int i = 0;
-/*
+
             ArrayList country = getObjects(TipoEntidade.PAIS);
             while (i < country.size()) {
                 System.out.println(country.get(i).toString());
@@ -365,7 +401,7 @@ public class Main {
                 System.out.println(city.get(i).toString());
                 i++;
             }
- */
+
 
             ArrayList invalideType = getObjects(TipoEntidade.INPUT_INVALIDO);
             while (i < invalideType.size()) {
@@ -374,6 +410,5 @@ public class Main {
             }
             System.out.println(getObjects(TipoEntidade.CIDADE).size());
 
-        }
-    }
-}
+            */
+

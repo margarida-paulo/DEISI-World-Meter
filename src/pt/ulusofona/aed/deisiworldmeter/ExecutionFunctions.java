@@ -1,11 +1,12 @@
 package pt.ulusofona.aed.deisiworldmeter;
 
-import static pt.ulusofona.aed.deisiworldmeter.Main.citiesSortedByPopulation;
+import static pt.ulusofona.aed.deisiworldmeter.Main.*;
 
 public class ExecutionFunctions {
 
     public static String helpCommand(){
-        String help = "";
+        String help = "\n-------------------------\n";
+        help += "Commands available:\n";
         help += "COUNT_CITIES <min_population>\n";
         help += "GET_CITIES_BY_COUNTRY <num-results> <country-name>\n";
         help += "SUM_POPULATIONS <countries-list>\n";
@@ -22,6 +23,7 @@ public class ExecutionFunctions {
         help += "REMOVE_COUNTRY <country-name>\n";
         help += "HELP\n";
         help += "QUIT\n";
+        help += "-------------------------\n";
         return help;
     }
 
@@ -35,7 +37,32 @@ public class ExecutionFunctions {
     }
 
     public static String getCitiesByCountry(String[] comando){
-        return null;
+
+        int numResults = Integer.parseInt(comando[1]);
+        String countryName = comando[2];
+        int citiesFoundedByCountry = 0;
+        String alfa2Country = null;
+        StringBuilder citiesList = new StringBuilder();
+
+        for (int i = 0; i < dataPaises.size(); i ++) {
+            if (countryName.equals(dataPaises.get(i).nome)) {
+                alfa2Country = dataPaises.get(i).alfa2;
+                i = dataPaises.size();
+            }
+        }
+
+        if (alfa2Country == null) {
+            return "";
+        }
+
+        for (int i = 0; citiesFoundedByCountry < numResults && i < dataCidades.size(); i++) {
+            if (alfa2Country.equals(dataCidades.get(i).alfa2)) {
+                citiesList.append(dataCidades.get(i).cidade);
+                citiesList.append("\n");
+                citiesFoundedByCountry++;
+            }
+        }
+        return citiesList.toString();
     }
 
 }
