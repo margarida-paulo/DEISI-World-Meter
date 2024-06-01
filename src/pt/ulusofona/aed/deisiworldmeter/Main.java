@@ -361,6 +361,11 @@ public class Main {
                 return new Result(true, null, ExecutionFunctions.getCitiesByCountry(comandoComArgs));
             }
 
+            case "SUM_POPULATIONS" -> {
+                String resultado = ExecutionFunctions.sumPopulations(comandoComArgs);
+                return new Result(true, null, resultado);
+            }
+
             case "COUNT_CITIES" -> {
                 return new Result(true, null, ExecutionFunctions.countCities(comandoComArgs));
             }
@@ -395,7 +400,7 @@ public class Main {
         System.out.println("Welcome to DEISI World Meter");
 
         long start = System.currentTimeMillis();
-        boolean parseOk = parseFiles(new File("test-files"));
+        boolean parseOk = parseFiles(new File("Data"));
         if (!parseOk) {
             System.out.println("Error loading files");
             return;

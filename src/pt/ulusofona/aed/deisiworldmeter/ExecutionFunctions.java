@@ -48,6 +48,10 @@ public class ExecutionFunctions {
 
     public static String getCitiesByCountry(String[] comando){
 
+        if (comando.length != 3) {
+            return "Número errado de argumentos!\n";
+        }
+
         int numResults = Integer.parseInt(comando[1]);
         String countryName = comando[2];
         int citiesFoundedByCountry = 0;
@@ -78,6 +82,37 @@ public class ExecutionFunctions {
         }
         return citiesList.toString();
     }
+
+    public static String sumPopulations(String[] comando) {
+
+        if (comando.length != 2) {
+            return "Número errado de argumentos!\n";
+        }
+
+        String countryName = comando[1];
+        int idCountry = -1;
+        int soma = 0;
+
+        for (Pais dataPais : dataPaises) {
+            if (countryName.equals(dataPais.nome)) {
+                idCountry = dataPais.id;
+                break;
+            }
+        }
+
+        if (idCountry == -1) {
+            return "Sem resultados";
+        }
+
+        for (Populacao populacao : dataPopulacao) {
+            if (idCountry == populacao.id && populacao.ano == 2024) {
+                soma = populacao.populacaoMasculina + populacao.populacaoFeminina;
+                break;
+            }
+        }
+        return String.valueOf(soma);
+    }
+
     public static String getCountriesGenderGap(String[] comando) {
         if (comando.length != 2) {
             return "Número errado de argumentos!\n";
@@ -226,7 +261,6 @@ public class ExecutionFunctions {
                 }
             }
         }
-
 
         if (duplicados.isEmpty()) {
             return "Sem resultados";
