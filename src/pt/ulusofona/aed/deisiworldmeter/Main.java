@@ -19,7 +19,11 @@ public class Main {
             return Float.compare(c2.populacao, c1.populacao);
         }
     });
+
+    // Dentro de cada país do countriesById, há um HashSet que tem os dados populacionais referentes a esse país
     public static HashMap<Integer, Pais> countriesById = new HashMap<>();
+
+    // Dentro de cada país do countriesByAlfa2, há de haver uma estrutura com as cidades desse país
     public static HashMap<String, Pais> countriesByAlfa2 = new HashMap<>();
     public static HashMap<String, Pais> countriesByName = new HashMap<>();
 
