@@ -1,7 +1,9 @@
 package pt.ulusofona.aed.deisiworldmeter;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import static pt.ulusofona.aed.deisiworldmeter.Main.*;
 
@@ -188,8 +190,40 @@ public class ExecutionFunctions {
         }
         int min_populacao = Integer.parseInt(comando[1]);
         String duplicados = "";
+        HashMap<String, ArrayList<String>> cidadesRepetidas = new HashMap<>();
+        for (Cidade city: dataCidades){
+            if(city.populacao < min_populacao){
+                continue;
+            }
+            String nomePais = countriesByAlfa2.get(city.alfa2).nome;
+            if (cidadesRepetidas.get(city.cidade) == null){
+                cidadesRepetidas.put(city.cidade, new ArrayList<>());
+                cidadesRepetidas.get(city.cidade).add(nomePais);
+            } else {
+                if (!(cidadesRepetidas.get(city.cidade).contains(nomePais))){
+                    cidadesRepetidas.get(city.cidade).add(nomePais);
+                }
+            }
+        }
 
+        for (Map.Entry<String, ArrayList<String>> entry : cidadesRepetidas.entrySet()) {
+            String key = entry.getKey();
+            ArrayList<String> value = entry.getValue();
 
+            if(value.size() > 1){
+                value.sort(null);
+                duplicados += key + ": ";
+                for (int i = 0; i < value.size(); i++){
+                    duplicados += value.get(i);
+                    if (i != value.size() - 1){
+                        duplicados += ",";
+                    }
+                    else {
+                        duplicados += "\n";
+                    }
+                }
+            }
+        }
 
 
         if (duplicados.isEmpty()) {

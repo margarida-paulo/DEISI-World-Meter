@@ -4,8 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
-import static java.lang.System.exit;
-
 enum TipoEntidade {
     PAIS, CIDADE, INPUT_INVALIDO
 }
@@ -22,7 +20,7 @@ public class Main {
         }
     });
     public static HashMap<Integer, Pais> countriesById = new HashMap<>();
-    public static HashMap<String, String> countriesByAlfa2 = new HashMap<>();
+    public static HashMap<String, Pais> countriesByAlfa2 = new HashMap<>();
     public static HashMap<String, Pais> countriesByName = new HashMap<>();
 
     static boolean alfa2EncontradoEmPaises(String alfa2) { //alfa2EncontradoEmPaises é uma função que verifica se um determinado alfa2 está presente na lista de países (dataPaises)
@@ -294,7 +292,7 @@ public class Main {
                 }
             }
             else {
-                countriesByAlfa2.put(dataPais.alfa2, dataPais.nome);
+                countriesByAlfa2.put(dataPais.alfa2, dataPais);
                 countriesById.put(dataPais.id, dataPais);
                 countriesByName.put(dataPais.nome, dataPais);
             }
