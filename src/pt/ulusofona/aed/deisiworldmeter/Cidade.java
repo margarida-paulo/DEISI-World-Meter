@@ -20,6 +20,7 @@ public class Cidade {
         this.linhaInvalida = linhaInvalida;
     }
 
+
     public String toString() {
         return cidade + " | " + alfa2.toUpperCase() + " | " + regiao + " | " + (int) populacao + " | (" + latitude + "," + longitude + ")";
     }

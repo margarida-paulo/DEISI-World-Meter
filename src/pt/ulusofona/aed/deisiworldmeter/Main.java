@@ -13,9 +13,19 @@ public class Main {
     public static ArrayList<Cidade> dataCidades = new ArrayList<>(); //dataCidades, vai armazenar uma lista de objetos do tipo Cidade
     public static ArrayList<Populacao> dataPopulacao = new ArrayList<>(); //dataPopulacao, vai armazenar uma lista de objetos do tipo Populacao
     public static ArrayList<TipoInvalido> dataInvalidos = new ArrayList<>(); //dataInvalidos, vai armazenar uma lista de objetos do tipo TipoInvalido
-    public static ArrayList<Cidade> citiesSortedByPopulation = new ArrayList<>();
+    public static TreeSet<Cidade> citiesSortedByPopulation = new TreeSet<>(new Comparator<Cidade>() {
+        @Override
+        public int compare(Cidade c1, Cidade c2) {
+            return Float.compare(c2.populacao, c1.populacao);
+        }
+    });
 
-    public static HashMap<String, String> countriesByAlfa2 = new HashMap<>();
+    // Dentro de cada país do countriesById, há um HashSet que tem os dados populacionais referentes a esse país
+    public static HashMap<Integer, Pais> countriesById = new HashMap<>();
+
+    // Dentro de cada país do countriesByAlfa2, há de haver uma estrutura com as cidades desse país
+    public static HashMap<String, Pais> countriesByAlfa2 = new HashMap<>();
+    public static HashMap<String, Pais> countriesByName = new HashMap<>();
 
     static boolean alfa2EncontradoEmPaises(String alfa2) { //alfa2EncontradoEmPaises é uma função que verifica se um determinado alfa2 está presente na lista de países (dataPaises)
         for (Pais dataPais : dataPaises) {
@@ -138,6 +148,9 @@ public class Main {
             dataInvalidos.get(2).numeroLinhasOk++;
         }
         dataPopulacao.add(new Populacao(Integer.parseInt(linhaDividida[0]), Integer.parseInt(linhaDividida[1]), Integer.parseInt(linhaDividida[2]), Integer.parseInt(linhaDividida[3]), Float.parseFloat(linhaDividida[4]), erro));
+
+        // Dentro do CountriesById existe um HashMap da população de cada país, onde a chave é o ano desses dados.
+        countriesById.get(Integer.parseInt(linhaDividida[0])).dadosPopulacao.put(Integer.parseInt(linhaDividida[1]), new Populacao(Integer.parseInt(linhaDividida[0]), Integer.parseInt(linhaDividida[1]), Integer.parseInt(linhaDividida[2]), Integer.parseInt(linhaDividida[3]), Float.parseFloat(linhaDividida[4]), erro));
         return;
     }
 
@@ -230,7 +243,7 @@ public class Main {
         } else {
             dataInvalidos.get(0).numeroLinhasOk++;
         }
-        dataPaises.add(new Pais(Integer.parseInt(linhaDividida[0]), linhaDividida[1], linhaDividida[2], linhaDividida[3], erro, 0));
+        dataPaises.add(new Pais(Integer.parseInt(linhaDividida[0]), linhaDividida[1], linhaDividida[2], linhaDividida[3], erro, 0, linhaCount));
         return;
     }
 
@@ -241,6 +254,8 @@ public class Main {
         dataInvalidos.clear();
         citiesSortedByPopulation.clear();
         countriesByAlfa2.clear();
+        countriesById.clear();
+        countriesByName.clear();
 
         dataInvalidos.add(new TipoInvalido("paises.csv", 0, 0, -1)); // dataInvalidos.get(0)
         dataInvalidos.add(new TipoInvalido("cidades.csv", 0, 0, -1)); // dataInvalidos.get(1)
@@ -259,11 +274,6 @@ public class Main {
         if (!parseEachFile(pasta + "/cidades.csv", 1)) {
             return false;
         }
-        if (!parseEachFile(pasta + "/populacao.csv", 2)) {
-            return false;
-        }
-
-        // Make a sorted cities arrayList
 
         Iterator<Pais> iterator = dataPaises.iterator();
         while (iterator.hasNext()) {
@@ -275,19 +285,31 @@ public class Main {
                     break;
                 }
             }
+            int linha = dataPais.nrLinha;
             if (!foundCity) {
                 iterator.remove();
+
+                dataInvalidos.get(0).numeroLinhasNaoOk += 1;
+                dataInvalidos.get(0).numeroLinhasOk -= 1;
+                if (dataInvalidos.get(0).primeiraLinhaNaoOK == -1 || linha < dataInvalidos.get(0).primeiraLinhaNaoOK) {
+                    dataInvalidos.get(0).primeiraLinhaNaoOK = linha;
+                }
             } else {
-                countriesByAlfa2.put(dataPais.alfa2, dataPais.nome);
+                countriesByAlfa2.put(dataPais.alfa2, dataPais);
+                countriesById.put(dataPais.id, dataPais);
+                countriesByName.put(dataPais.nome, dataPais);
             }
         }
 
-        citiesSortedByPopulation = new ArrayList<>();
         for (Cidade dataCidade : dataCidades) {
             citiesSortedByPopulation.add(new Cidade(dataCidade.alfa2, dataCidade.cidade, dataCidade.regiao, dataCidade.populacao, dataCidade.latitude, dataCidade.longitude, false));
         }
-        citiesSortedByPopulation.sort(Comparator.comparing((Cidade c) -> c.populacao).reversed());
+
+        if (!parseEachFile(pasta + "/populacao.csv", 2)) {
+            return false;
+        }
         return true;
+
     }
 
     static ArrayList<String> getObjects(TipoEntidade tipo) {
@@ -334,11 +356,34 @@ public class Main {
             case "HELP" -> {
                 return new Result(true, null, ExecutionFunctions.helpCommand());
             }
+
+            case "GET_CITIES_BY_COUNTRY" -> {
+                return new Result(true, null, ExecutionFunctions.getCitiesByCountry(comandoComArgs));
+            }
+
             case "COUNT_CITIES" -> {
                 return new Result(true, null, ExecutionFunctions.countCities(comandoComArgs));
             }
-            case "GET_CITIES_BY_COUNTRY" -> {
-                return new Result(true, null, ExecutionFunctions.getCitiesByCountry(comandoComArgs));
+            case "GET_COUNTRIES_GENDER_GAP" -> {
+                String resultado = ExecutionFunctions.getCountriesGenderGap(comandoComArgs);
+                return new Result(true, null, resultado);
+            }
+
+            case "GET_TOP_POPULATION_INCREASE" -> {
+                String resultado = ExecutionFunctions.getTopPopulationIncrease(comandoComArgs);
+                return new Result(true, null, resultado);
+            }
+            case "INSERT_CITY" -> {
+                String resultado = ExecutionFunctions.insertCity(comandoComArgs);
+                return new Result(true, null, resultado);
+            }
+            case "REMOVE_COUNTRY" -> {
+                String resultado = ExecutionFunctions.removeCountry(comandoComArgs);
+                return new Result(true, null, resultado);
+            }
+            case "GET_DUPLICATE_CITIES_DIFFERENT_COUNTRIES" -> {
+                String resultado = ExecutionFunctions.getDuplicatesDifferentCountries(comandoComArgs);
+                return new Result(true, null, resultado);
             }
             default -> {
                 return new Result(false, "Comando invalido", null);
@@ -350,7 +395,7 @@ public class Main {
         System.out.println("Welcome to DEISI World Meter");
 
         long start = System.currentTimeMillis();
-        boolean parseOk = parseFiles(new File("Data"));
+        boolean parseOk = parseFiles(new File("test-files"));
         if (!parseOk) {
             System.out.println("Error loading files");
             return;
@@ -384,31 +429,3 @@ public class Main {
         } while (line != null && !line.equals("QUIT"));
     }
 }
-        /*
-        System.out.println("Bem vindo ao DEISI World Meter");
-        System.out.println();
-        if (parseFiles(new File("Data"))) {
-            int i = 0;
-
-            ArrayList country = getObjects(TipoEntidade.PAIS);
-            while (i < country.size()) {
-                System.out.println(country.get(i).toString());
-                i++;
-            }
-
-            ArrayList city = getObjects(TipoEntidade.CIDADE);
-            while (i < city.size()) {
-                System.out.println(city.get(i).toString());
-                i++;
-            }
-
-
-            ArrayList invalideType = getObjects(TipoEntidade.INPUT_INVALIDO);
-            while (i < invalideType.size()) {
-                System.out.println(invalideType.get(i).toString());
-                i++;
-            }
-            System.out.println(getObjects(TipoEntidade.CIDADE).size());
-
-            */
-
