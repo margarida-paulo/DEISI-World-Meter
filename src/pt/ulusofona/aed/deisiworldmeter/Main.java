@@ -303,6 +303,7 @@ public class Main {
 
         for (Cidade dataCidade : dataCidades) {
             citiesSortedByPopulation.add(new Cidade(dataCidade.alfa2, dataCidade.cidade, dataCidade.regiao, dataCidade.populacao, dataCidade.latitude, dataCidade.longitude, false));
+            countriesByAlfa2.get(dataCidade.alfa2).cidades.add(dataCidade);
         }
 
         if (!parseEachFile(pasta + "/populacao.csv", 2)) {
@@ -383,6 +384,10 @@ public class Main {
             }
             case "GET_DUPLICATE_CITIES_DIFFERENT_COUNTRIES" -> {
                 String resultado = ExecutionFunctions.getDuplicatesDifferentCountries(comandoComArgs);
+                return new Result(true, null, resultado);
+            }
+            case "GET_CITIES_AT_DISTANCE" -> {
+                String resultado = ExecutionFunctions.getCitiesAtDistance(comandoComArgs);
                 return new Result(true, null, resultado);
             }
             default -> {
