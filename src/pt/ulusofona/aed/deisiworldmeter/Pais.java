@@ -14,6 +14,7 @@ public class Pais {
     boolean linhaInvalida;
 
     HashMap<Integer, Populacao> dadosPopulacao = new HashMap<>();
+    ArrayList<Cidade> cidades = new ArrayList<>();
 
     int nrLinha; // Para quando removermos uma linha após o parse each file, podermos colocar no primeiraLinhaNaoOk
 
