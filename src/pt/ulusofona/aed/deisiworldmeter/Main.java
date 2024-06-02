@@ -396,6 +396,10 @@ public class Main {
                 String resultado = ExecutionFunctions.getCitiesAtDistance(comandoComArgs);
                 return new Result(true, null, resultado);
             }
+            case "GET_CITIES_AT_DISTANCE2" -> {
+                String resultado = ExecutionFunctions.getCitiesAtDistance2(comandoComArgs);
+                return new Result(true, null, resultado);
+            }
             default -> {
                 return new Result(false, "Comando invalido", null);
             }
