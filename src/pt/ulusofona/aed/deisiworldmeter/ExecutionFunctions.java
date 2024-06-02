@@ -135,6 +135,21 @@ public class ExecutionFunctions {
             return "Pais invalido: " + countryName;
         }
 
+        boolean startYearExists = false;
+        boolean endYearExists = false;
+        for (Populacao populacao : dataPopulacao) {
+            if (populacao.ano == startYear) {
+                startYearExists = true;
+            }
+            if (populacao.ano == endYear) {
+                endYearExists = true;
+            }
+        }
+
+        if (!startYearExists || !endYearExists) {
+            return "Sem resultados";
+        }
+
         for (Populacao populacao : dataPopulacao) {
             if (startYear <= endYear && populacao.ano == startYear) {
                 informationList.append(startYear).append(":").append(populacao.populacaoMasculina / 1000).append("k").append(":").append(populacao.populacaoFeminina / 1000).append("k");
