@@ -31,22 +31,22 @@ public class ExecutionFunctions {
         return help;
     }
 
-    public static String countCities(String[] comando) {
+    public static String countCities(String[] comando) { ///Mudei para um for loop -> sem erros
         if (comando.length != 2) {
             return "Número errado de argumentos!\n";
         }
-        int min_populacao = Integer.parseInt(comando[1]);
+        int min_population = Integer.parseInt(comando[1]);
         int qtyCities = 0;
 
-        Iterator<Cidade> iterator = citiesSortedByPopulation.iterator();
-        while (iterator.hasNext() && iterator.next().populacao >= min_populacao) {
-            qtyCities++;
+        for (Cidade citiesPopulation : dataCidades) {
+            if (citiesPopulation.populacao >= min_population) {
+                qtyCities++;
+            }
         }
-
         return Integer.toString(qtyCities);
     }
 
-    public static String getCitiesByCountry(String[] comando){
+    public static String getCitiesByCountry(String[] comando){ /// comando -> sem erros
 
         if (comando.length != 3) {
             return "Número errado de argumentos!\n";
@@ -83,37 +83,38 @@ public class ExecutionFunctions {
         return citiesList.toString();
     }
 
-    public static String sumPopulations(String[] comando) {
+    public static String sumPopulations(String[] comando) { ///comando -> sem erros
 
         if (comando.length != 2) {
             return "Número errado de argumentos!\n";
         }
 
-        String countryName = comando[1];
-        int idCountry = -1;
+        String[] multipleCountries = comando[1].split(",");
+        HashMap<String, Integer> countryMap = new HashMap<>(); /// criei um mapa que nos ajuda com os IDs através dos nomes dos paises
         int soma = 0;
 
         for (Pais dataPais : dataPaises) {
-            if (countryName.equals(dataPais.nome)) {
-                idCountry = dataPais.id;
-                break;
+            countryMap.put(dataPais.nome, dataPais.id);
+        }
+
+        for (String countryName : multipleCountries) {
+            Integer idCountry = countryMap.get(countryName);
+
+            if (idCountry == null) {
+                return "Pais invalido: " + countryName;
             }
-        }
 
-        if (idCountry == -1) {
-            return "Sem resultados";
-        }
-
-        for (Populacao populacao : dataPopulacao) {
-            if (idCountry == populacao.id && populacao.ano == 2024) {
-                soma = populacao.populacaoMasculina + populacao.populacaoFeminina;
-                break;
+            for (Populacao populacao : dataPopulacao) {
+                if (idCountry == populacao.id && populacao.ano == 2024) {
+                    soma += populacao.populacaoMasculina + populacao.populacaoFeminina;
+                    break;
+                }
             }
         }
         return String.valueOf(soma);
     }
 
-    public static String getCountriesGenderGap(String[] comando) {
+    public static String getCountriesGenderGap(String[] comando) { ///comando -> sem erros
         if (comando.length != 2) {
             return "Número errado de argumentos!\n";
         }

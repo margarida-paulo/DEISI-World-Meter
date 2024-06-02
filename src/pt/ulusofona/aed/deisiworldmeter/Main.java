@@ -13,12 +13,7 @@ public class Main {
     public static ArrayList<Cidade> dataCidades = new ArrayList<>(); //dataCidades, vai armazenar uma lista de objetos do tipo Cidade
     public static ArrayList<Populacao> dataPopulacao = new ArrayList<>(); //dataPopulacao, vai armazenar uma lista de objetos do tipo Populacao
     public static ArrayList<TipoInvalido> dataInvalidos = new ArrayList<>(); //dataInvalidos, vai armazenar uma lista de objetos do tipo TipoInvalido
-    public static TreeSet<Cidade> citiesSortedByPopulation = new TreeSet<>(new Comparator<Cidade>() {
-        @Override
-        public int compare(Cidade c1, Cidade c2) {
-            return Float.compare(c2.populacao, c1.populacao);
-        }
-    });
+    public static ArrayList<Cidade> citiesSortedByPopulation = new ArrayList<>();
 
     // Dentro de cada país do countriesById, há um HashSet que tem os dados populacionais referentes a esse país
     public static HashMap<Integer, Pais> countriesById = new HashMap<>();
