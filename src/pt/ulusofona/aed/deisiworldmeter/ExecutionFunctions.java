@@ -122,40 +122,23 @@ public class ExecutionFunctions {
         int startYear = Integer.parseInt(comando[1]);
         int endYear = Integer.parseInt(comando[2]);
         String countryName = comando[3];
-        HashMap<String, Integer> countryMap = new HashMap<>();
         StringBuilder informationList = new StringBuilder();
-
-        for (Pais dataPais : dataPaises) {
-            countryMap.put(dataPais.nome, dataPais.id);
-        }
-
-        Integer idCountry = countryMap.get(countryName);
-
-        if (idCountry == null) {
+        Pais pais = countriesByName.get(countryName);
+        if (pais == null) {
             return "Pais invalido: " + countryName;
         }
+        Integer idCountry = pais.id;
 
-        boolean startYearExists = false;
-        boolean endYearExists = false;
-        for (Populacao populacao : dataPopulacao) {
-            if (populacao.ano == startYear) {
-                startYearExists = true;
-            }
-            if (populacao.ano == endYear) {
-                endYearExists = true;
-            }
-        }
-
-        if (!startYearExists || !endYearExists) {
-            return "Sem resultados";
-        }
-
-        for (Populacao populacao : dataPopulacao) {
-            if (startYear <= endYear && populacao.ano == startYear) {
-                informationList.append(startYear).append(":").append(populacao.populacaoMasculina / 1000).append("k").append(":").append(populacao.populacaoFeminina / 1000).append("k");
+        while (startYear <= endYear) {
+            Populacao populacaoStartYear = pais.dadosPopulacao.get(startYear);
+            if (populacaoStartYear != null) {
+                informationList.append(startYear).append(":").append(populacaoStartYear.populacaoMasculina / 1000).append("k").append(":").append(populacaoStartYear.populacaoFeminina / 1000).append("k");
                 informationList.append("\n");
-                startYear++;
             }
+            startYear++;
+        }
+        if (informationList.isEmpty()){
+            return "Sem resultados";
         }
         return informationList.toString();
     }
