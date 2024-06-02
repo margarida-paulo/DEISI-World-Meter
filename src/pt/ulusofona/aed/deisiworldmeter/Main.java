@@ -353,6 +353,10 @@ public class Main {
                 return new Result(true, null, ExecutionFunctions.helpCommand());
             }
 
+            case "COUNT_CITIES" -> {
+                return new Result(true, null, ExecutionFunctions.countCities(comandoComArgs));
+            }
+
             case "GET_CITIES_BY_COUNTRY" -> {
                 return new Result(true, null, ExecutionFunctions.getCitiesByCountry(comandoComArgs));
             }
@@ -362,9 +366,11 @@ public class Main {
                 return new Result(true, null, resultado);
             }
 
-            case "COUNT_CITIES" -> {
-                return new Result(true, null, ExecutionFunctions.countCities(comandoComArgs));
+            case "GET_HISTORY" -> {
+                String resultado = ExecutionFunctions.getHistory(comandoComArgs);
+                return new Result(true, null, resultado);
             }
+
             case "GET_COUNTRIES_GENDER_GAP" -> {
                 String resultado = ExecutionFunctions.getCountriesGenderGap(comandoComArgs);
                 return new Result(true, null, resultado);

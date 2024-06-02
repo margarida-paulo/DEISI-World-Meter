@@ -114,6 +114,37 @@ public class ExecutionFunctions {
         return String.valueOf(soma);
     }
 
+    public static String getHistory(String[] comando) { /// comando com um erro mas não percebo de onde vem
+        if (comando.length != 4) {
+            return "Número errado de argumentos!\n";
+        }
+
+        int startYear = Integer.parseInt(comando[1]);
+        int endYear = Integer.parseInt(comando[2]);
+        String countryName = comando[3];
+        HashMap<String, Integer> countryMap = new HashMap<>();
+        StringBuilder informationList = new StringBuilder();
+
+        for (Pais dataPais : dataPaises) {
+            countryMap.put(dataPais.nome, dataPais.id);
+        }
+
+        Integer idCountry = countryMap.get(countryName);
+
+        if (idCountry == null) {
+            return "Pais invalido: " + countryName;
+        }
+
+        for (Populacao populacao : dataPopulacao) {
+            if (startYear <= endYear && populacao.ano == startYear) {
+                informationList.append(startYear).append(":").append(populacao.populacaoMasculina / 1000).append("k").append(":").append(populacao.populacaoFeminina / 1000).append("k");
+                informationList.append("\n");
+                startYear++;
+            }
+        }
+        return informationList.toString();
+    }
+
     public static String getCountriesGenderGap(String[] comando) { ///comando -> sem erros
         if (comando.length != 2) {
             return "Número errado de argumentos!\n";
