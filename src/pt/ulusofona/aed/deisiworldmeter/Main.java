@@ -13,7 +13,12 @@ public class Main {
     public static ArrayList<Cidade> dataCidades = new ArrayList<>(); //dataCidades, vai armazenar uma lista de objetos do tipo Cidade
     public static ArrayList<Populacao> dataPopulacao = new ArrayList<>(); //dataPopulacao, vai armazenar uma lista de objetos do tipo Populacao
     public static ArrayList<TipoInvalido> dataInvalidos = new ArrayList<>(); //dataInvalidos, vai armazenar uma lista de objetos do tipo TipoInvalido
-    public static ArrayList<Cidade> citiesSortedByPopulation = new ArrayList<>();
+    public static TreeSet<Cidade> citiesSortedByPopulation = new TreeSet<>(new Comparator<Cidade>() {
+        @Override
+        public int compare(Cidade c1, Cidade c2) {
+            return Float.compare(c2.populacao, c1.populacao);
+        }
+    });
 
     // Dentro de cada país do countriesById, há um HashSet que tem os dados populacionais referentes a esse país
     public static HashMap<Integer, Pais> countriesById = new HashMap<>();
@@ -371,6 +376,11 @@ public class Main {
                 return new Result(true, null, resultado);
             }
 
+            case "GET_DUPLICATE_CITIES" -> {
+                String resultado = ExecutionFunctions.getDuplicates(comandoComArgs);
+                return new Result(true, null, resultado);
+            }
+
             case "GET_COUNTRIES_GENDER_GAP" -> {
                 String resultado = ExecutionFunctions.getCountriesGenderGap(comandoComArgs);
                 return new Result(true, null, resultado);
@@ -410,7 +420,7 @@ public class Main {
         System.out.println("Welcome to DEISI World Meter");
 
         long start = System.currentTimeMillis();
-        boolean parseOk = parseFiles(new File("Data"));
+        boolean parseOk = parseFiles(new File("test-files"));
         if (!parseOk) {
             System.out.println("Error loading files");
             return;

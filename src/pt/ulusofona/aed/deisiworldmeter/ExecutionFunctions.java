@@ -143,6 +143,31 @@ public class ExecutionFunctions {
         return informationList.toString();
     }
 
+    public static String getDuplicates(String[] comando){
+        if (comando.length!= 2) {
+            return "Número errado de argumentos!\n";
+        }
+        int min_populacao = Integer.parseInt(comando[1]);
+        String duplicados = "";
+        HashMap<String, Cidade> cidadesRepetidas = new HashMap<>();
+
+        for(Cidade cidade : dataCidades){
+            if (cidade.populacao < min_populacao){
+                continue;
+            }
+            if (cidadesRepetidas.get(cidade.cidade) == null) {
+                cidadesRepetidas.put(cidade.cidade, cidade);
+            } else {
+                duplicados += cidade.cidade + " (" + countriesByAlfa2.get(cidade.alfa2).nome + "," + cidade.regiao + ")\n";
+            }
+        }
+        if (duplicados.isEmpty()) {
+            return "Sem resultados";
+        } else {
+            return duplicados;
+        }
+    }
+
     public static String getCountriesGenderGap(String[] comando) { ///comando -> sem erros
         if (comando.length != 2) {
             return "Número errado de argumentos!\n";
