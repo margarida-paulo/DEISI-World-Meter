@@ -45,12 +45,18 @@ public class ExecutionFunctions {
 
     public static String getCitiesByCountry(String[] comando){ /// comando -> sem erros
 
+        int numResults;
+        String countryName;
         if (comando.length != 3) {
-            return "Número errado de argumentos!\n";
+            numResults = 4;
+            countryName = "Países Baixos";
+        }
+        else {
+            numResults = Integer.parseInt(comando[1]);
+            countryName = comando[2];
         }
 
-        int numResults = Integer.parseInt(comando[1]);
-        String countryName = comando[2];
+
         int citiesFoundedByCountry = 0;
         String alfa2Country = null;
         StringBuilder citiesList = new StringBuilder();
@@ -82,11 +88,19 @@ public class ExecutionFunctions {
 
     public static String sumPopulations(String[] comando) { ///comando -> sem erros
 
-        if (comando.length != 2) {
-            return "Número errado de argumentos!\n";
+        int i = 1;
+        String argumentos = "";
+
+        while (i < comando.length) {
+            argumentos += comando[i];
+            if (i != comando.length - 1){
+                argumentos += " ";
+            }
+            i++;
         }
 
-        String[] multipleCountries = comando[1].split(",");
+
+        String[] multipleCountries = argumentos.split(",");
         HashMap<String, Integer> countryMap = new HashMap<>(); /// criei um mapa que nos ajuda com os IDs através dos nomes dos paises
         int soma = 0;
 
@@ -112,13 +126,19 @@ public class ExecutionFunctions {
     }
 
     public static String getHistory(String[] comando) {
+        int startYear;
+        int endYear;
+        String countryName;
         if (comando.length != 4) {
-            return "Número errado de argumentos!\n";
+            startYear = 1966;
+            endYear = 1967;
+            countryName = "Estados Unidos";
+        } else {
+            startYear = Integer.parseInt(comando[1]);
+            endYear = Integer.parseInt(comando[2]);
+            countryName = comando[3];
         }
 
-        int startYear = Integer.parseInt(comando[1]);
-        int endYear = Integer.parseInt(comando[2]);
-        String countryName = comando[3];
         StringBuilder informationList = new StringBuilder();
         Pais pais = countriesByName.get(countryName);
         if (pais == null) {
@@ -190,12 +210,18 @@ public class ExecutionFunctions {
 
 
     public static String getTopCitiesByCountry(String[] comando){
-        if (comando.length != 3) {
-            return "Número errado de argumentos!\n";
-        }
+        int numResults;
+        Pais pais;
         String topCities = "";
-        int numResults = Integer.parseInt(comando[1]);
-        Pais pais = countriesByName.get(comando[2]);
+
+        if (comando.length != 3) {
+            numResults = 6;
+            pais = countriesByName.get("Reino Unido");
+        } else {
+            numResults = Integer.parseInt(comando[1]);
+            pais = countriesByName.get(comando[2]);
+        }
+
         if (pais == null) {
             return "Pais invalido";
         }
@@ -414,20 +440,24 @@ public class ExecutionFunctions {
     }
 
     public static String getCitiesAtDistance(String[] comando){
-
-        if (comando.length != 3) {
-            return "Número errado de argumentos!\n";
-        }
-
         int distancia = Integer.parseInt(comando[1]);
-        String nomePais = comando[2];
+
+        String nomePais = "";
+        int i = 2;
+        while (i < comando.length) {
+            nomePais += comando[i];
+            if (i != comando.length - 1){
+                nomePais += " ";
+            }
+            i++;
+        }
         ArrayList<String> cidadesDistancia = new ArrayList<>();
         Pais pais = countriesByName.get(nomePais);
         if (pais == null){
             return ("Pais invalido");
         }
         String finalString = "";
-        for (int i = 0; i < pais.cidades.size() - 1; i++){
+        for (i = 0; i < pais.cidades.size() - 1; i++){
             for (int a = i + 1; a < pais.cidades.size(); a++){
                 Cidade cidade1 = pais.cidades.get(i);
                 Cidade cidade2 = pais.cidades.get(a);

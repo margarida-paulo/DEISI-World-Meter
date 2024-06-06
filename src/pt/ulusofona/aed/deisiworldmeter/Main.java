@@ -22,6 +22,7 @@ public class Main {
 
     // Dentro de cada país do countriesById, há um HashSet que tem os dados populacionais referentes a esse país
     public static HashMap<Integer, Pais> countriesById = new HashMap<>();
+    // Dentro de cada país do countriesByAlfa2, há um HashSet que tem as cidades referentes a esse país
     public static HashMap<String, Pais> countriesByAlfa2 = new HashMap<>();
     public static HashMap<String, Pais> countriesByName = new HashMap<>();
 
@@ -201,6 +202,7 @@ public class Main {
             dataInvalidos.get(1).numeroLinhasOk++;
         }
         dataCidades.add(new Cidade(linhaDividida[0], linhaDividida[1], linhaDividida[2], Float.parseFloat(linhaDividida[3]), linhaDividida[4], linhaDividida[5], erro));
+
     }
 
     private static void newPais(String[] linhaDividida, boolean erro, int linhaCount) {
@@ -251,7 +253,13 @@ public class Main {
         dataPopulacao.clear();
         dataInvalidos.clear();
         citiesSortedByPopulation.clear();
+        for (Pais pais: countriesByAlfa2.values()) {
+            pais.cidades.clear();
+        }
         countriesByAlfa2.clear();
+        for (Pais pais : countriesById.values()) {
+            pais.dadosPopulacao.clear();
+        }
         countriesById.clear();
         countriesByName.clear();
 
@@ -307,6 +315,9 @@ public class Main {
         if (!parseEachFile(pasta + "/populacao.csv", 2)) {
             return false;
         }
+
+
+
         return true;
 
     }
@@ -433,7 +444,7 @@ public class Main {
         System.out.println("Welcome to DEISI World Meter");
 
         long start = System.currentTimeMillis();
-        boolean parseOk = parseFiles(new File("test-files"));
+        boolean parseOk = parseFiles(new File("Data"));
         if (!parseOk) {
             System.out.println("Error loading files");
             return;
