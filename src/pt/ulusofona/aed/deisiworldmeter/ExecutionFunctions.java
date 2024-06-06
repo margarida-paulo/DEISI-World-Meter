@@ -1,9 +1,6 @@
 package pt.ulusofona.aed.deisiworldmeter;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 import static pt.ulusofona.aed.deisiworldmeter.Main.*;
 
@@ -114,7 +111,7 @@ public class ExecutionFunctions {
         return String.valueOf(soma);
     }
 
-    public static String getHistory(String[] comando) { /// comando com um erro mas não percebo de onde vem
+    public static String getHistory(String[] comando) {
         if (comando.length != 4) {
             return "Número errado de argumentos!\n";
         }
@@ -141,6 +138,79 @@ public class ExecutionFunctions {
             return "Sem resultados";
         }
         return informationList.toString();
+    }
+
+    public static String getMissingHistory(String[] comando){
+        if (comando.length != 3) {
+            return "Número errado de argumentos!\n";
+        }
+        String missingHistory = "";
+        int startYear = Integer.parseInt(comando[1]);
+        int endYear = Integer.parseInt(comando[2]);
+
+        for (Pais pais : countriesById.values()) {
+            for (int i = startYear; i <= endYear; i++) {
+                if (pais.dadosPopulacao.get(i) == null) {
+                    missingHistory += pais.alfa2 + ":" + pais.nome + "\n";
+                    break;
+                }
+            }
+        }
+        if (missingHistory.isEmpty()){
+            return "Sem resultados";
+        }
+        return missingHistory;
+    }
+
+    public static String getMostPopulous(String[] comando){
+        if (comando.length != 2) {
+            return "Número errado de argumentos!\n";
+        }
+        int numResults = Integer.parseInt(comando[1]);
+        HashMap<String, String> paisesJaUsados = new HashMap<>();
+        String mostPopulous = "";
+        Iterator<Cidade> iterator = citiesSortedByPopulation.iterator();
+        int i = 0;
+
+        while (iterator.hasNext() && i < numResults){
+            Cidade city = iterator.next();
+            String nomePais = countriesByAlfa2.get(city.alfa2).nome;
+            if (paisesJaUsados.get(nomePais) == null){
+                paisesJaUsados.put(nomePais, nomePais);
+                mostPopulous += nomePais + ":" + city.cidade + ":" + (int)city.populacao + "\n";
+                i++;
+            }
+        }
+        if (mostPopulous.isEmpty()){
+            return "Sem resultados";
+        }
+        return mostPopulous;
+    }
+
+
+
+    public static String getTopCitiesByCountry(String[] comando){
+        if (comando.length != 3) {
+            return "Número errado de argumentos!\n";
+        }
+        String topCities = "";
+        int numResults = Integer.parseInt(comando[1]);
+        Pais pais = countriesByName.get(comando[2]);
+        if (pais == null) {
+            return "Pais invalido";
+        }
+        ArrayList<Cidade> cidades = new ArrayList<>(countriesByAlfa2.get(pais.alfa2).cidades);
+        cidades.sort(Comparator.comparingInt((Cidade c) -> c.populacaoMilhares).reversed().thenComparing((Cidade c) -> c.cidade));
+        if (numResults == -1){
+            numResults = cidades.size();
+        }
+        for (int i = 0; i < numResults && i < cidades.size(); i++){
+            topCities += cidades.get(i).cidade + ":" + cidades.get(i).populacaoMilhares + "K\n";
+        }
+        if (topCities.isEmpty()){
+            return "Sem resultados";
+        }
+        return topCities;
     }
 
     public static String getDuplicates(String[] comando){

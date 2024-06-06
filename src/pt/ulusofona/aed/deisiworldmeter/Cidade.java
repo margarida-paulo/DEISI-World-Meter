@@ -5,6 +5,7 @@ public class Cidade {
     String cidade;
     String regiao;
     float populacao;
+    int populacaoMilhares;
     String latitude;
     String longitude;
     boolean linhaInvalida;
@@ -15,6 +16,7 @@ public class Cidade {
         this.cidade = cidade;
         this.regiao = regiao;
         this.populacao = populacao;
+        this.populacaoMilhares = (int) populacao / 1000;
         this.latitude = latitude;
         this.longitude = longitude;
         this.linhaInvalida = linhaInvalida;

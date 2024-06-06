@@ -22,8 +22,6 @@ public class Main {
 
     // Dentro de cada país do countriesById, há um HashSet que tem os dados populacionais referentes a esse país
     public static HashMap<Integer, Pais> countriesById = new HashMap<>();
-
-    // Dentro de cada país do countriesByAlfa2, há de haver uma estrutura com as cidades desse país
     public static HashMap<String, Pais> countriesByAlfa2 = new HashMap<>();
     public static HashMap<String, Pais> countriesByName = new HashMap<>();
 
@@ -373,6 +371,21 @@ public class Main {
 
             case "GET_HISTORY" -> {
                 String resultado = ExecutionFunctions.getHistory(comandoComArgs);
+                return new Result(true, null, resultado);
+            }
+
+            case "GET_MISSING_HISTORY" -> {
+                String resultado = ExecutionFunctions.getMissingHistory(comandoComArgs);
+                return new Result(true, null, resultado);
+            }
+
+            case "GET_MOST_POPULOUS" -> {
+                String resultado = ExecutionFunctions.getMostPopulous(comandoComArgs);
+                return new Result(true, null, resultado);
+            }
+
+            case "GET_TOP_CITIES_BY_COUNTRY" -> {
+                String resultado = ExecutionFunctions.getTopCitiesByCountry(comandoComArgs);
                 return new Result(true, null, resultado);
             }
 
