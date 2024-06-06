@@ -45,15 +45,13 @@ public class ExecutionFunctions {
 
     public static String getCitiesByCountry(String[] comando){ /// comando -> sem erros
 
-        int numResults;
-        String countryName;
-        if (comando.length != 3) {
-            numResults = 4;
-            countryName = "Países Baixos";
-        }
-        else {
-            numResults = Integer.parseInt(comando[1]);
-            countryName = comando[2];
+        int numResults = Integer.parseInt(comando[1]);
+        String countryName = "";;
+        for (int i = 2; i < comando.length; i++){
+            countryName += comando[i];
+            if (i != comando.length - 1){
+                countryName += " ";
+            }
         }
 
 
@@ -126,17 +124,16 @@ public class ExecutionFunctions {
     }
 
     public static String getHistory(String[] comando) {
-        int startYear;
-        int endYear;
-        String countryName;
-        if (comando.length != 4) {
-            startYear = 1966;
-            endYear = 1967;
-            countryName = "Estados Unidos";
-        } else {
-            startYear = Integer.parseInt(comando[1]);
-            endYear = Integer.parseInt(comando[2]);
-            countryName = comando[3];
+
+        int startYear = Integer.parseInt(comando[1]);
+        int endYear = Integer.parseInt(comando[2]);
+        String countryName = "";
+
+        for (int i = 3; i < comando.length; i++){
+            countryName += comando[i];
+            if (i != comando.length - 1){
+                countryName += " ";
+            }
         }
 
         StringBuilder informationList = new StringBuilder();
@@ -210,17 +207,17 @@ public class ExecutionFunctions {
 
 
     public static String getTopCitiesByCountry(String[] comando){
-        int numResults;
-        Pais pais;
         String topCities = "";
+        String nomePais = "";
 
-        if (comando.length != 3) {
-            numResults = 6;
-            pais = countriesByName.get("Reino Unido");
-        } else {
-            numResults = Integer.parseInt(comando[1]);
-            pais = countriesByName.get(comando[2]);
+        for (int i = 2; i < comando.length; i++){
+            nomePais += comando[i];
+            if (i != comando.length - 1){
+                nomePais += " ";
+            }
         }
+        int numResults = Integer.parseInt(comando[1]);
+        Pais pais = countriesByName.get(nomePais);
 
         if (pais == null) {
             return "Pais invalido";
@@ -230,7 +227,7 @@ public class ExecutionFunctions {
         if (numResults == -1){
             numResults = cidades.size();
         }
-        for (int i = 0; i < numResults && i < cidades.size(); i++){
+        for (int i = 0; i < numResults && i < cidades.size() && cidades.get(i).populacaoMilhares >= 10; i++){
             topCities += cidades.get(i).cidade + ":" + cidades.get(i).populacaoMilhares + "K\n";
         }
         if (topCities.isEmpty()){
@@ -324,6 +321,7 @@ public class ExecutionFunctions {
     }
 
     public static String insertCity(String[] comando){
+//        Main.prepDistances();
         if (comando.length != 5) {
             return "Número errado de argumentos!\n";
         }
@@ -351,6 +349,7 @@ public class ExecutionFunctions {
         if (comando.length != 2) {
             return "Número errado de argumentos!\n";
         }
+//        Main.prepDistances();
         if (countriesByName.get(comando[1]) == null)
         {
             return "Pais invalido";
@@ -481,14 +480,57 @@ public class ExecutionFunctions {
         return finalString;
     }
 
+  /*  public static String getCitiesAtDistance2(String[] comando){
+        int distancia = Integer.parseInt(comando[1]);
+        ArrayList<String> cidadesDistanciaCorreta = new ArrayList<>();
+
+        String nomePaisOrigem = "";
+        int i = 2;
+        while (i < comando.length) {
+            nomePaisOrigem += comando[i];
+            if (i != comando.length - 1){
+                nomePaisOrigem += " ";
+            }
+            i++;
+        }
+        if (countriesByName.get(nomePaisOrigem) == null){
+            return "Pais invalido";
+        }
+        Iterator<HaversineDistances> iterator = countriesByName.get(nomePaisOrigem).haversines.iterator();
+        while (iterator.hasNext()){
+            HaversineDistances specificCity = iterator.next();
+            if (specificCity.haversineDistance < distancia - 1){
+                continue;
+            }
+            if (specificCity.haversineDistance > distancia + 1){
+                break;
+            }
+            cidadesDistanciaCorreta.add(specificCity.cityAlphaFirst + "->" + specificCity.cityAlphaSecond + "\n");
+        }
+        cidadesDistanciaCorreta.sort(null);
+        if (cidadesDistanciaCorreta.isEmpty()){
+            return "Sem resultados";
+        }
+        String finalString = "";
+        for (String cidadesQueCabem : cidadesDistanciaCorreta){
+            finalString += cidadesQueCabem;
+        }
+        return finalString;
+    }*/
+
     public static String getCitiesAtDistance2(String[] comando){
 
-        if (comando.length != 3) {
-            return "Número errado de argumentos!\n";
+        int distancia = Integer.parseInt(comando[1]);
+        String nomePaisOrigem = "";
+        int i = 2;
+        while (i < comando.length) {
+            nomePaisOrigem += comando[i];
+            if (i != comando.length - 1){
+                nomePaisOrigem += " ";
+            }
+            i++;
         }
 
-        int distancia = Integer.parseInt(comando[1]);
-        String nomePaisOrigem = comando[2];
         ArrayList<String> cidadesDistancia = new ArrayList<>();
         Pais paisOrigem = countriesByName.get(nomePaisOrigem);
         if (paisOrigem == null){

@@ -193,12 +193,15 @@ za,butterworth,05,34353.0,-32.330833,28.149808
 
     @Test
     public void testeTopCitiesByCountry(){
-        Main.parseFiles(new File("test-files"));
+        Main.parseFiles(new File("test-files2TEST"));
         Assertions.assertEquals("abrantes:13K\n" +
                 "weida:10K\n" +
                 "abraveses:9K\n" +
+                "cidade1:9K\n" +
                 "adaufe:3K\n" +
-                "adjusta:1K\n", ExecutionFunctions.getTopCitiesByCountry(new String[]{"GET_TOP_CITIES_BY_COUNTRY", "-1", "Portugal"}));
+                "cidade2:3K\n" +
+                "adjusta:1K\n" +
+                "cidade3:1K\n", ExecutionFunctions.getTopCitiesByCountry(new String[]{"GET_TOP_CITIES_BY_COUNTRY", "-1", "Portugal"}));
 
         Main.parseFiles(new File("test-files"));
         Assertions.assertEquals("abrantes:13K\n" +
@@ -207,12 +210,6 @@ za,butterworth,05,34353.0,-32.330833,28.149808
                 "adaufe:3K\n" +
                 "adjusta:1K\n", ExecutionFunctions.getTopCitiesByCountry(new String[]{"GET_TOP_CITIES_BY_COUNTRY", "-1", "Portugal"}));
 
-        Main.parseFiles(new File("test-files"));
-        Assertions.assertEquals("abrantes:13K\n" +
-                "weida:10K\n" +
-                "abraveses:9K\n" +
-                "adaufe:3K\n" +
-                "adjusta:1K\n", ExecutionFunctions.getTopCitiesByCountry(new String[]{"GET_TOP_CITIES_BY_COUNTRY", "-1", "Portugal"}));
 
 
     }

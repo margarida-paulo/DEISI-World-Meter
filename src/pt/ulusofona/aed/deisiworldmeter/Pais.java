@@ -1,7 +1,9 @@
 package pt.ulusofona.aed.deisiworldmeter;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.TreeSet;
 
 import static pt.ulusofona.aed.deisiworldmeter.Main.dataPopulacao;
 
@@ -15,6 +17,13 @@ public class Pais {
 
     HashMap<Integer, Populacao> dadosPopulacao = new HashMap<>();
     ArrayList<Cidade> cidades = new ArrayList<>();
+
+    TreeSet<HaversineDistances> haversines = new TreeSet<>(new Comparator<HaversineDistances>() {
+        @Override
+        public int compare(HaversineDistances c1, HaversineDistances c2) {
+            return Float.compare(c2.haversineDistance, c1.haversineDistance);
+        }
+    });
 
     int nrLinha; // Para quando removermos uma linha após o parse each file, podermos colocar no primeiraLinhaNaoOk
 

@@ -24,6 +24,8 @@ public class Main {
     public static HashMap<Integer, Pais> countriesById = new HashMap<>();
     // Dentro de cada país do countriesByAlfa2, há um HashSet que tem as cidades referentes a esse país
     public static HashMap<String, Pais> countriesByAlfa2 = new HashMap<>();
+
+    // Dentro de cada país do countriesByName, há uma HashMap cuja chave é a distancia Haversine e o valor é o nome da cidade
     public static HashMap<String, Pais> countriesByName = new HashMap<>();
 
     static boolean alfa2EncontradoEmPaises(String alfa2) { //alfa2EncontradoEmPaises é uma função que verifica se um determinado alfa2 está presente na lista de países (dataPaises)
@@ -316,6 +318,8 @@ public class Main {
             return false;
         }
 
+ //       prepDistances();
+
 
 
         return true;
@@ -357,6 +361,29 @@ public class Main {
         }
         return novaInformacao;
     }
+
+/*    static void prepDistances(){
+        for (Pais pais : countriesByName.values()){
+            pais.haversines.clear();
+        }
+        for (Pais paisOrigem : countriesByName.values()){
+            for (Pais paisComparar : countriesByName.values()) {
+                if (paisComparar.nome.equals(paisOrigem.nome)) {
+                    continue;
+                }
+                for (Cidade cidadeOrigem : paisOrigem.cidades) {
+                    for (Cidade cidadeComparar : paisComparar.cidades) {
+                        double haversineDistance = ExecutionFunctions.haversineFormula(Double.parseDouble(cidadeOrigem.latitude), Double.parseDouble(cidadeOrigem.longitude), Double.parseDouble(cidadeComparar.latitude), Double.parseDouble(cidadeComparar.longitude));
+                            if (cidadeOrigem.cidade.compareTo(cidadeComparar.cidade) < 0) {
+                                paisOrigem.haversines.add(new HaversineDistances(cidadeOrigem.cidade, cidadeComparar.cidade, (float) haversineDistance));
+                            } else {
+                                paisOrigem.haversines.add(new HaversineDistances(cidadeComparar.cidade, cidadeOrigem.cidade, (float) haversineDistance));
+                            }
+                    }
+                }
+            }
+        }
+    }*/
 
     public static Result execute(String comando) {
 
