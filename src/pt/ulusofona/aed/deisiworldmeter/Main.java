@@ -28,6 +28,15 @@ public class Main {
     // Dentro de cada país do countriesByName, há uma HashMap cuja chave é a distancia Haversine e o valor é o nome da cidade
     public static HashMap<String, Pais> countriesByName = new HashMap<>();
 
+    public static HashMap<String, String> distancesCache = new HashMap<>();
+    public static TreeSet<Float> latitudesOrdered = new TreeSet<>();
+
+
+    public static HashMap<Float, TreeSet<Float>> latitudesLongitudes = new HashMap<>();
+
+    public static HashMap<String, Cidade> citiesByLatitudeLongitude = new HashMap<>();
+
+
     static boolean alfa2EncontradoEmPaises(String alfa2) { //alfa2EncontradoEmPaises é uma função que verifica se um determinado alfa2 está presente na lista de países (dataPaises)
         for (Pais dataPais : dataPaises) {
             if (Objects.equals(alfa2, dataPais.alfa2)) {
@@ -204,7 +213,15 @@ public class Main {
             dataInvalidos.get(1).numeroLinhasOk++;
         }
         dataCidades.add(new Cidade(linhaDividida[0], linhaDividida[1], linhaDividida[2], Float.parseFloat(linhaDividida[3]), linhaDividida[4], linhaDividida[5], erro));
-
+        latitudesOrdered.add(Float.parseFloat(linhaDividida[4]));
+        if (latitudesLongitudes.get(Float.parseFloat(linhaDividida[4])) == null) {
+            latitudesLongitudes.put(Float.parseFloat(linhaDividida[4]), new TreeSet<>());
+            latitudesLongitudes.get(Float.parseFloat(linhaDividida[4])).add(Float.parseFloat(linhaDividida[5]));
+        } else {
+            latitudesLongitudes.get(Float.parseFloat(linhaDividida[4])).add(Float.parseFloat(linhaDividida[5]));
+        }
+        String latitudesLongitudes = Float.parseFloat(linhaDividida[4]) + "," + Float.parseFloat((linhaDividida[5]));
+        citiesByLatitudeLongitude.put(latitudesLongitudes, new Cidade(linhaDividida[0], linhaDividida[1], linhaDividida[2], Float.parseFloat(linhaDividida[3]), linhaDividida[4], linhaDividida[5], erro));
     }
 
     private static void newPais(String[] linhaDividida, boolean erro, int linhaCount) {
@@ -255,6 +272,10 @@ public class Main {
         dataPopulacao.clear();
         dataInvalidos.clear();
         citiesSortedByPopulation.clear();
+        distancesCache.clear();
+        latitudesOrdered.clear();
+        latitudesLongitudes.clear();
+        citiesByLatitudeLongitude.clear();
         for (Pais pais: countriesByAlfa2.values()) {
             pais.cidades.clear();
         }
@@ -318,7 +339,7 @@ public class Main {
             return false;
         }
 
- //       prepDistances();
+   //     prepDistances();
 
 
 
@@ -362,7 +383,8 @@ public class Main {
         return novaInformacao;
     }
 
-/*    static void prepDistances(){
+ /*   static void prepDistances(){
+        int counter = 0;
         for (Pais pais : countriesByName.values()){
             pais.haversines.clear();
         }
@@ -379,6 +401,8 @@ public class Main {
                             } else {
                                 paisOrigem.haversines.add(new HaversineDistances(cidadeComparar.cidade, cidadeOrigem.cidade, (float) haversineDistance));
                             }
+                            counter++;
+                            System.out.println((counter * 100 / 25e8) + "% COMPLETED");
                     }
                 }
             }

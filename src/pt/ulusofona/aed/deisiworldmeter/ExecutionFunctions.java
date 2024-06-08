@@ -342,6 +342,7 @@ public class ExecutionFunctions {
         dataCidades.add(new Cidade(alfa2, nome, regiao, Float.parseFloat(comando[4]), "0.0", "0.0", false));
         citiesSortedByPopulation.add(new Cidade(alfa2, nome, regiao, Float.parseFloat(comando[4]), "0.0", "0.0", false));
         countriesByAlfa2.get(alfa2).cidades.add(new Cidade(alfa2, nome, regiao, Float.parseFloat(comando[4]), "0.0", "0.0", false));
+
         return "Inserido com sucesso";
     }
 
@@ -369,6 +370,7 @@ public class ExecutionFunctions {
         }
         dataCidades.removeIf(dataCidade -> dataCidade.alfa2.equals(alfa2));
         citiesSortedByPopulation.removeIf(dataCidade -> dataCidade.alfa2.equals(alfa2));
+        citiesByLatitudeLongitude.values().removeIf(dataCidade -> dataCidade.alfa2.equals(alfa2));
         return "Removido com sucesso";
     }
 
@@ -480,7 +482,7 @@ public class ExecutionFunctions {
         return finalString;
     }
 
-  /*  public static String getCitiesAtDistance2(String[] comando){
+/*    public static String getCitiesAtDistance2(String[] comando){
         int distancia = Integer.parseInt(comando[1]);
         ArrayList<String> cidadesDistanciaCorreta = new ArrayList<>();
 
@@ -505,7 +507,7 @@ public class ExecutionFunctions {
             if (specificCity.haversineDistance > distancia + 1){
                 break;
             }
-            cidadesDistanciaCorreta.add(specificCity.cityAlphaFirst + "->" + specificCity.cityAlphaSecond + "\n");
+            cidadesDistanciaCorreta.add(specificCity.citiesByOrder + "\n");
         }
         cidadesDistanciaCorreta.sort(null);
         if (cidadesDistanciaCorreta.isEmpty()){
@@ -518,7 +520,7 @@ public class ExecutionFunctions {
         return finalString;
     }*/
 
-    public static String getCitiesAtDistance2(String[] comando){
+ /*   public static String getCitiesAtDistance2(String[] comando){
 
         int distancia = Integer.parseInt(comando[1]);
         String nomePaisOrigem = "";
@@ -531,13 +533,16 @@ public class ExecutionFunctions {
             i++;
         }
 
+        if (distancesCache.get(nomePaisOrigem + distancia) != null){
+            return distancesCache.get(nomePaisOrigem + distancia);
+        }
+
         ArrayList<String> cidadesDistancia = new ArrayList<>();
         Pais paisOrigem = countriesByName.get(nomePaisOrigem);
         if (paisOrigem == null){
             return ("Pais invalido");
         }
         String finalString = "";
-
         for (Pais paisComparar : countriesByName.values()) {
             if (paisComparar.nome.equals(nomePaisOrigem)) {
                 continue;
@@ -562,6 +567,85 @@ public class ExecutionFunctions {
         for (String cidadesQueCabem : cidadesDistancia){
             finalString += cidadesQueCabem + "\n";
         }
+        distancesCache.put(nomePaisOrigem + distancia, finalString);
+        return finalString;
+    } */
+
+    // Returns an float[] with min latitude, max latitude, min longitude, max longitude
+    public static float[] calculateLatLongRanges(float latitude, float longitude, int distance){
+        float[] ranges = new float[4];
+        int i;
+        for(i = 0;  haversineFormula(latitude, longitude, latitude + i, longitude) < distance *20; i++){
+
+        }
+        ranges[0] = latitude - i;
+        ranges[1] = latitude + i;
+        for(i = 0;  haversineFormula(latitude, longitude, latitude, longitude + i) < distance *20; i++) {
+
+        }
+        ranges[2] = longitude - i;
+        ranges[3] = longitude + i;
+        return ranges;
+
+    }
+
+
+    public static String getCitiesAtDistance2(String[] comando){
+        int distancia = Integer.parseInt(comando[1]);
+        String nomePaisOrigem = "";
+        int i = 2;
+        while (i < comando.length) {
+            nomePaisOrigem += comando[i];
+            if (i != comando.length - 1){
+                nomePaisOrigem += " ";
+            }
+            i++;
+        }
+
+        if (distancesCache.get(nomePaisOrigem + distancia) != null){
+            return distancesCache.get(nomePaisOrigem + distancia);
+        }
+
+        ArrayList<String> cidadesDistancia = new ArrayList<>();
+        Pais paisOrigem = countriesByName.get(nomePaisOrigem);
+        if (paisOrigem == null){
+            return ("Pais invalido");
+        }
+        String finalString = "";
+        for (Cidade cidadeOrigem : paisOrigem.cidades) {
+            float lat =Float.parseFloat(cidadeOrigem.latitude);
+            float longi = Float.parseFloat(cidadeOrigem.longitude);
+            float ranges[] = calculateLatLongRanges(lat, longi, distancia);
+            float minLatitude = ranges[0];
+            float maxLatitude = ranges[1];
+            float minLongitude = ranges[2];
+            float maxLongitude = ranges[3];
+            SortedSet<Float> latitudesRange = latitudesOrdered.subSet(minLatitude, maxLatitude);
+            for (float latitude : latitudesRange){
+                SortedSet<Float> longitudesRange = latitudesLongitudes.get(latitude).subSet(minLongitude, maxLongitude);
+                for (float longitude : longitudesRange){
+                    Cidade cidadeDestino = citiesByLatitudeLongitude.get(latitude + "," + longitude);
+                    if (cidadeDestino != null && !cidadeDestino.alfa2.equals(cidadeOrigem.alfa2)){
+                        double haversineDistance = haversineFormula(lat, longi, Float.parseFloat(cidadeDestino.latitude),Float.parseFloat(cidadeDestino.longitude));
+                        if (haversineDistance > distancia - 1 && haversineDistance < distancia + 1){
+                            if (cidadeOrigem.cidade.compareTo(cidadeDestino.cidade) < 0){
+                                cidadesDistancia.add(cidadeOrigem.cidade + "->" + cidadeDestino.cidade);
+                            } else {
+                                cidadesDistancia.add(cidadeDestino.cidade + "->" + cidadeOrigem.cidade);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if (cidadesDistancia.isEmpty()){
+            return "Sem resultados";
+        }
+        cidadesDistancia.sort(null);
+        for (String cidadesQueCabem : cidadesDistancia){
+            finalString += cidadesQueCabem + "\n";
+        }
+        distancesCache.put(nomePaisOrigem + distancia, finalString);
         return finalString;
     }
 }
