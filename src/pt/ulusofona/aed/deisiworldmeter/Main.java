@@ -485,6 +485,10 @@ public class Main {
                 String resultado = ExecutionFunctions.getCitiesAtDistance2(comandoComArgs);
                 return new Result(true, null, resultado);
             }
+            case "GET_CITIES_BY_REGION" -> {
+                String resultado = ExecutionFunctions.getCitiesByRegion(comandoComArgs);
+                return new Result(true, null, resultado);
+            }
             default -> {
                 return new Result(false, "Comando invalido", null);
             }
@@ -495,7 +499,7 @@ public class Main {
         System.out.println("Welcome to DEISI World Meter");
 
         long start = System.currentTimeMillis();
-        boolean parseOk = parseFiles(new File("Data"));
+        boolean parseOk = parseFiles(new File("test-files/getCitiesByRegion"));
         if (!parseOk) {
             System.out.println("Error loading files");
             return;
