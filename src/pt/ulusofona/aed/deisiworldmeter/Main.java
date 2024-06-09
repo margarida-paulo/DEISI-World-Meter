@@ -499,7 +499,7 @@ public class Main {
         System.out.println("Welcome to DEISI World Meter");
 
         long start = System.currentTimeMillis();
-        boolean parseOk = parseFiles(new File("test-files/getCitiesByRegion"));
+        boolean parseOk = parseFiles(new File("test-files/getTopPopulationIncrease"));
         if (!parseOk) {
             System.out.println("Error loading files");
             return;

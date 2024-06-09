@@ -187,7 +187,209 @@ public class TestMain {
 
 
     @Test
-    public void testGetCitiesByRegion() {
+    public void testGetMostPopulous(){
+        assertTrue(Main.parseFiles(new File("test-files/getMostPopulous")));
+        Result result = Main.execute("GET_MOST_POPULOUS 5");
+        assertNotNull(result);
+        assertTrue(result.success);
+        String[] resultParts = result.result.split("\n");
+        assertArrayEquals(new String[] {
+                "China:jilin:1881977",
+                "Zimbábue:zvishavane:79876",
+                "Portugal:santarem:29385",
+                "Estados Unidos:manchester:19235",
+                "Andorra:les escaldes:15854"
+        }, resultParts);
+
+        assertTrue(Main.parseFiles(new File("test-files/getMostPopulous")));
+        result = Main.execute("GET_MOST_POPULOUS 4");
+        assertNotNull(result);
+        assertTrue(result.success);
+        resultParts = result.result.split("\n");
+        assertArrayEquals(new String[] {
+                "China:jilin:1881977",
+                "Zimbábue:zvishavane:79876",
+                "Portugal:santarem:29385",
+                "Estados Unidos:manchester:19235"
+        }, resultParts);
+
+        assertTrue(Main.parseFiles(new File("test-files/getMostPopulous")));
+        result = Main.execute("GET_MOST_POPULOUS 2");
+        assertNotNull(result);
+        assertTrue(result.success);
+        resultParts = result.result.split("\n");
+        assertArrayEquals(new String[] {
+                "China:jilin:1881977",
+                "Zimbábue:zvishavane:79876"
+        }, resultParts);
+
+    }
+
+
+    @Test
+    public void testGetTopCitiesByCountry(){
+        assertTrue(Main.parseFiles(new File("test-files/getTopCitiesByCountry")));
+        Result result = Main.execute("GET_TOP_CITIES_BY_COUNTRY 5 Portugal");
+        assertNotNull(result);
+        assertTrue(result.success);
+        String[] resultParts = result.result.split("\n");
+        assertArrayEquals(new String[] {
+                "lisbon:517K",
+                "porto:249K",
+                "amadora:178K",
+                "braga:121K",
+                "setubal:117K"
+        }, resultParts);
+
+        assertTrue(Main.parseFiles(new File("test-files/getTopCitiesByCountry")));
+        result = Main.execute("GET_TOP_CITIES_BY_COUNTRY 5 Brasil");
+        assertNotNull(result);
+        assertTrue(result.success);
+        resultParts = result.result.split("\n");
+        assertArrayEquals(new String[] {
+                "sao paulo:10021K",
+                "rio de janeiro:6023K",
+                "salvador:2711K",
+                "fortaleza:2416K",
+                "belo horizonte:2373K"
+        }, resultParts);
+
+        assertTrue(Main.parseFiles(new File("test-files/getTopCitiesByCountry")));
+        result = Main.execute("GET_TOP_CITIES_BY_COUNTRY 5 China");
+        assertNotNull(result);
+        assertTrue(result.success);
+        resultParts = result.result.split("\n");
+        assertArrayEquals(new String[] {
+                "shanghai:14608K",
+                "peking:7480K",
+                "wuhan:4184K",
+                "chongqing:3967K",
+                "xian:3953K"
+        }, resultParts);
+    }
+
+
+    @Test
+    public void testGetDuplicateCities(){
+        assertTrue(Main.parseFiles(new File("test-files/getDuplicateCities")));
+        Result result = Main.execute("GET_DUPLICATE_CITIES 10000");
+        assertNotNull(result);
+        assertTrue(result.success);
+        String[] resultParts = result.result.split("\n");
+        assertArrayEquals(new String[] {
+                "binzhou (China,16)"
+        }, resultParts);
+
+        assertTrue(Main.parseFiles(new File("test-files/getDuplicateCities")));
+        result = Main.execute("GET_DUPLICATE_CITIES 100000");
+        assertNotNull(result);
+        assertTrue(result.success);
+        resultParts = result.result.split("\n");
+        assertArrayEquals(new String[] {
+                "Sem resultados"
+        }, resultParts);
+
+        assertTrue(Main.parseFiles(new File("test-files/getDuplicateCities")));
+        result = Main.execute("GET_DUPLICATE_CITIES 20000");
+        assertNotNull(result);
+        assertTrue(result.success);
+        resultParts = result.result.split("\n");
+        assertArrayEquals(new String[] {
+                "Sem resultados"
+        }, resultParts);
+    }
+
+
+    @Test
+    public void testGetCountriesGenderGap(){
+        assertTrue(Main.parseFiles(new File("test-files/getCountriesGenderGap")));
+        Result result = Main.execute("GET_COUNTRIES_GENDER_GAP 0");
+        assertNotNull(result);
+        assertTrue(result.success);
+        String[] resultParts = result.result.split("\n");
+        assertArrayEquals(new String[] {
+                "Portugal:5.57",
+                "África do Sul:5.57",
+                "Alemanha:1.26"
+        }, resultParts);
+
+        assertTrue(Main.parseFiles(new File("test-files/getCountriesGenderGap")));
+        result = Main.execute("GET_COUNTRIES_GENDER_GAP 6");
+        assertNotNull(result);
+        assertTrue(result.success);
+        resultParts = result.result.split("\n");
+        assertArrayEquals(new String[] {
+                "Sem resultados"
+        }, resultParts);
+
+        assertTrue(Main.parseFiles(new File("test-files/getCountriesGenderGap")));
+        result = Main.execute("GET_COUNTRIES_GENDER_GAP 5");
+        assertNotNull(result);
+        assertTrue(result.success);
+        resultParts = result.result.split("\n");
+        assertArrayEquals(new String[] {
+                "Portugal:5.57",
+                "África do Sul:5.57"
+        }, resultParts);
+    }
+
+
+    @Test
+    public void testGetTopPopulationIncrease(){
+        assertTrue(Main.parseFiles(new File("test-files/getTopPopulationIncrease")));
+        Result result = Main.execute("GET_TOP_POPULATION_INCREASE 2020 2030");
+        assertNotNull(result);
+        assertTrue(result.success);
+        String[] resultParts = result.result.split("\n");
+        assertArrayEquals(new String[] {
+                "Portugal:2020-2022:25.45%",
+                "África do Sul:2020-2024:22.69%",
+                "África do Sul:2023-2024:22.69%",
+                "Portugal:2020-2021:16.36%",
+                "África do Sul:2021-2024:15.12%"
+        }, resultParts);
+
+        assertTrue(Main.parseFiles(new File("test-files/getTopPopulationIncrease")));
+        result = Main.execute("GET_TOP_POPULATION_INCREASE 2020 2000");
+        assertNotNull(result);
+        assertTrue(result.success);
+        resultParts = result.result.split("\n");
+        assertArrayEquals(new String[] {
+                "Sem resultados"
+        }, resultParts);
+    }
+
+
+    @Test
+    public void testInsertCity(){
+        assertTrue(Main.parseFiles(new File("test-files/insertCity")));
+        Result result = Main.execute("INSERT_CITY pt lisboa 14 10000");
+        assertNotNull(result);
+        assertTrue(result.success);
+        String[] resultParts = result.result.split("\n");
+        assertArrayEquals(new String[] {
+                "Inserido com sucesso"
+        }, resultParts);
+    }
+
+
+    @Test
+    public void testRemoveCountry(){
+        assertTrue(Main.parseFiles(new File("test-files/removeCountry")));
+        Result result = Main.execute("REMOVE_COUNTRY Alemanha");
+        assertNotNull(result);
+        assertTrue(result.success);
+        String[] resultParts = result.result.split("\n");
+        assertArrayEquals(new String[] {
+                "Removido com sucesso"
+        }, resultParts);
+    }
+
+
+
+
+    @Test
+    public void testCreativeCommand() {
         assertTrue(Main.parseFiles(new File("test-files/getCitiesByRegion")));
         Result result = Main.execute("GET_CITIES_BY_REGION 10 BLA");
         assertNotNull(result);
