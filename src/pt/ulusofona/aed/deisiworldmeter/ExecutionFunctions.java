@@ -486,11 +486,11 @@ public class ExecutionFunctions {
     public static float[] calculateLatLongRanges(float latitude, float longitude, int distance){
         float[] ranges = new float[4];
         int i;
-        for(i = 0;  haversineFormula(latitude, longitude, latitude + i, longitude) < distance *20; i++){
+        for(i = 0;  haversineFormula(latitude, longitude, latitude + i, longitude) < distance * 20; i++){
         }
         ranges[0] = latitude - i;
         ranges[1] = latitude + i;
-        for(i = 0;  haversineFormula(latitude, longitude, latitude, longitude + i) < distance *20; i++) {
+        for(i = 0;  haversineFormula(latitude, longitude, latitude, longitude + i) < distance * 20; i++) {
         }
         ranges[2] = longitude - i;
         ranges[3] = longitude + i;

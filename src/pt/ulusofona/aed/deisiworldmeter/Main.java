@@ -29,8 +29,8 @@ public class Main {
     public static HashMap<String, Pais> countriesByName = new HashMap<>();
 
     public static HashMap<String, String> distancesCache = new HashMap<>();
-    public static TreeSet<Float> latitudesOrdered = new TreeSet<>();
 
+    public static TreeSet<Float> latitudesOrdered = new TreeSet<>();
 
     public static HashMap<Float, TreeSet<Float>> latitudesLongitudes = new HashMap<>();
 
@@ -499,7 +499,7 @@ public class Main {
         System.out.println("Welcome to DEISI World Meter");
 
         long start = System.currentTimeMillis();
-        boolean parseOk = parseFiles(new File("test-files/getTopPopulationIncrease"));
+        boolean parseOk = parseFiles(new File("test-files/getCitiesAtDistance2"));
         if (!parseOk) {
             System.out.println("Error loading files");
             return;

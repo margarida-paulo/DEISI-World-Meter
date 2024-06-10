@@ -363,12 +363,25 @@ public class TestMain {
     @Test
     public void testInsertCity(){
         assertTrue(Main.parseFiles(new File("test-files/insertCity")));
+        Result initialNumberOfCities = Main.execute("COUNT_CITIES 0");
         Result result = Main.execute("INSERT_CITY pt lisboa 14 10000");
         assertNotNull(result);
         assertTrue(result.success);
         String[] resultParts = result.result.split("\n");
+        Assertions.assertEquals(Integer.parseInt(initialNumberOfCities.result) + 1, Integer.parseInt(Main.execute("COUNT_CITIES 0").result));
         assertArrayEquals(new String[] {
                 "Inserido com sucesso"
+        }, resultParts);
+
+        assertTrue(Main.parseFiles(new File("test-files/insertCity")));
+        initialNumberOfCities = Main.execute("COUNT_CITIES 0");
+        result = Main.execute("INSERT_CITY bla cidadeImaginaria 0 12");
+        assertNotNull(result);
+        assertTrue(result.success);
+        resultParts = result.result.split("\n");
+        Assertions.assertEquals(Integer.parseInt(initialNumberOfCities.result), Integer.parseInt(Main.execute("COUNT_CITIES 0").result));
+        assertArrayEquals(new String[] {
+                "Pais invalido"
         }, resultParts);
     }
 
@@ -383,9 +396,90 @@ public class TestMain {
         assertArrayEquals(new String[] {
                 "Removido com sucesso"
         }, resultParts);
+
+        assertTrue(Main.parseFiles(new File("test-files/removeCountry")));
+        result = Main.execute("REMOVE_COUNTRY PaisImaginario");
+        assertNotNull(result);
+        assertTrue(result.success);
+        resultParts = result.result.split("\n");
+        assertArrayEquals(new String[] {
+                "Pais invalido"
+        }, resultParts);
+    }
+
+    @Test
+    public void testGetDuplicatesDifferentCountries(){
+        assertTrue(Main.parseFiles(new File("test-files/getDuplicatesDifferentCountries")));
+        Result result = Main.execute("GET_DUPLICATE_CITIES_DIFFERENT_COUNTRIES 0");
+        assertNotNull(result);
+        assertTrue(result.success);
+        String[] resultParts = result.result.split("\n");
+        assertArrayEquals(new String[] {
+                "viseu: Brasil,Portugal",
+                "valencia: Colômbia,Espanha"
+        }, resultParts);
+
+        result = Main.execute("GET_DUPLICATE_CITIES_DIFFERENT_COUNTRIES 15000");
+        assertNotNull(result);
+        assertTrue(result.success);
+        resultParts = result.result.split("\n");
+        assertArrayEquals(new String[] {
+                "viseu: Brasil,Portugal"
+        }, resultParts);
     }
 
 
+    @Test
+    public void testGetCitiesAtDistance(){
+        assertTrue(Main.parseFiles(new File("test-files/getCitiesAtDistance")));
+        Result result = Main.execute("GET_CITIES_AT_DISTANCE 100 Portugal");
+        assertNotNull(result);
+        assertTrue(result.success);
+        String[] resultParts = result.result.split("\n");
+        assertArrayEquals(new String[] {
+                "viana do castelo->vila real"
+        }, resultParts);
+
+        assertTrue(Main.parseFiles(new File("test-files/getCitiesAtDistance")));
+        result = Main.execute("GET_CITIES_AT_DISTANCE 10 China");
+        assertNotNull(result);
+        assertTrue(result.success);
+        resultParts = result.result.split("\n");
+        assertArrayEquals(new String[] {
+                "anbu->chenghai"
+        }, resultParts);
+    }
+
+
+    @Test
+    public void testGetCitiesAtDistance2(){
+        assertTrue(Main.parseFiles(new File("test-files/getCitiesAtDistance2")));
+        Result result = Main.execute("GET_CITIES_AT_DISTANCE2 50 Portugal");
+        assertNotNull(result);
+        assertTrue(result.success);
+        String[] resultParts = result.result.split("\n");
+        assertArrayEquals(new String[] {
+                "cangas->vila praia de ancora",
+                "galegos->tomino",
+                "meadela->nigran",
+                "mozelos->redondela",
+                "nigran->viana do castelo"
+        }, resultParts);
+
+        result = Main.execute("GET_CITIES_AT_DISTANCE2 60 Espanha");
+        assertNotNull(result);
+        assertTrue(result.success);
+        resultParts = result.result.split("\n");
+        assertArrayEquals(new String[] {
+                "bueu->mozelos",
+                "cartaya->moncarapacho",
+                "macedo de cavaleiros->verin",
+                "nigran->sande",
+                "povoa de lanhoso->tomino",
+                "punta umbria->tavira",
+                "viana do castelo->vigo"
+        }, resultParts);
+    }
 
 
     @Test
